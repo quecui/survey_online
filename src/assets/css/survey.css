@@ -1,0 +1,13 @@
+.container {
+    width: 100% !important;
+}
+
+.nav>li:hover {
+    background-color: #CCCCCC;
+    color: white;
+}
+
+.nav>li {
+    color: black;
+    width: 50px;
+}

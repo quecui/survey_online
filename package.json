@@ -5,7 +5,9 @@
   "author": "storm",
   "dependencies": {
     "axios": "^0.18.0",
+    "block-ui": "^2.70.1",
     "bootstrap": "^4.1.1",
+    "jquery": "^3.3.1",
     "prop-types": "^15.6.1",
     "react": "^16.3.2",
     "react-bootstrap": "^0.32.1",

@@ -1,12 +1,23 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
+import PropTypes from "prop-types"
 import { bindActionCreators } from 'redux'
 import {Navbar, Nav, NavItem} from 'react-bootstrap'
+import {Redirect} from 'react-router-dom'
+import * as formAction from '../form/formAction'
 import SignIn from '../form/signin'
 import SignUp from '../form/signup'
 import '../../assets/css/survey.css'
 
 class Header extends Component {
+    static propTypes = {
+        signIn: PropTypes.func.isRequired,
+        showSignInForm: PropTypes.func.isRequired,
+        header: PropTypes.object.isRequired,
+        getUsernameByToken: PropTypes.func.isRequired,
+        showUsernameInHeader: PropTypes.func.isRequired
+    }
+
     constructor(props) {
         super(props);
         this.props = props;
@@ -16,11 +27,27 @@ class Header extends Component {
         this.submitSignIn = this.submitSignIn.bind(this)
         this.switchForm = this.switchForm.bind(this)
         this.submitSignUp = this.submitSignUp.bind(this)
+        this.signout = this.signout.bind(this)
+        this.requireSignIn = this.requireSignIn.bind(this)
 
         this.state = {
             showSignInForm: false,
-            showSignUpForm: false
+            showSignUpForm: false,
+            isRedirect: false
         }
+    }
+    componentWillMount() {
+        const token = localStorage.getItem('userToken')
+
+        if(token !== null && token !== undefined){
+            this.props.getUsernameByToken(token)
+        }
+
+        if(localStorage.getItem('signinForm') !== null){
+            this.setState({showSignInForm: true})
+            localStorage.removeItem('signinForm')
+        }
+
     }
 
     setShowSignInForm(flag){
@@ -32,10 +59,8 @@ class Header extends Component {
     }
 
     submitSignIn(username, password) {
-        alert(username)
-        alert(password)
-
         this.setShowSignInForm(false)
+        this.props.signIn({name: username, pass: password})
     }
 
     switchForm(key){
@@ -54,9 +79,22 @@ class Header extends Component {
         alert(password)
     }
 
+    signout(){
+        this.setState({isRedirect: true})
+        localStorage.clear();
+        this.props.showUsernameInHeader('')
+    }
+
+    requireSignIn(){
+        if(this.props.header.username === ''){
+            localStorage.setItem('signinForm', true)
+        }
+    }
+
     render(){
         return (
             <div>
+                {this.state.isRedirect === true ? <Redirect to='/'/>: ''}
                 <Navbar className={'header-bg'}>
                     <Navbar.Header>
                         <Navbar.Brand>
@@ -66,10 +104,13 @@ class Header extends Component {
                     </Navbar.Header>
                     <Navbar.Collapse>
                         <Nav pullRight>
-                            <NavItem className={'welcome-user'}>
-                                <span><span className="icon glyphicon glyphicon-user"></span> Storm Spirit</span>
-                            </NavItem>
-                            <NavItem eventKey={1} href="survey">
+                            {this.props.header.username === '' ? '' :
+                                <NavItem className={'welcome-user'}>
+                                    <span><span className="icon glyphicon glyphicon-user"></span> {this.props.header.username}</span>
+                                </NavItem>
+                            }
+
+                            <NavItem eventKey={1} href="survey" onClick={e => this.requireSignIn()}>
                                 <span className="icon glyphicon glyphicon-th"></span> SURVEY
                             </NavItem>
                             <NavItem eventKey={1} href="contact">
@@ -79,9 +120,14 @@ class Header extends Component {
                             <NavItem eventKey={1} href="about">
                                 <span className="icon glyphicon glyphicon-list-alt"></span> ABOUT
                             </NavItem>
-                            <NavItem eventKey={2} href="#" onClick={e => this.setShowSignInForm(true)}>
-                                <span className="icon glyphicon glyphicon-log-in"></span> SIGNIN
-                            </NavItem>
+                            {this.props.header.username === '' ?
+                                <NavItem eventKey={2} href="#" onClick={e => this.setShowSignInForm(true)}>
+                                    <span className="icon glyphicon glyphicon-log-in"></span> SIGNIN
+                                </NavItem> :
+                                <NavItem eventKey={2} href="#" onClick={e => this.signout()}>
+                                    <span className="icon glyphicon glyphicon-log-out"></span> SIGNOUT
+                                </NavItem>
+                            }
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>
@@ -94,10 +140,16 @@ class Header extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state) => {
+    return {
+        header: state.header,
+    }
+}
 
-})
-
-const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch)
+const mapDispatchToProps = dispatch => bindActionCreators({
+    signIn: formAction.signIn,
+    showUsernameInHeader: formAction.showUsernameInHeader,
+    getUsernameByToken: formAction.getUsernameByToken
+}, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header)

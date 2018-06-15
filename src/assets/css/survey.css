@@ -1,3 +1,7 @@
+.header-bg{
+    background-color: white!important;
+}
+
 .container {
     width: 100% !important;
 }
@@ -7,7 +11,144 @@
     color: white;
 }
 
+.navbar-default .navbar-nav>li>a{
+    color: green;
+}
+
+.navbar-brand{
+    color: black!important;
+}
+
+.icon{
+    color: black!important;
+}
+
 .nav>li {
-    color: black;
-    width: 50px;
+    color: #060B0F;
+    width: 140px;
+    text-align: center;
+    font-size: 18px;
+    height: 100%;
+}
+
+.navbar-brand:hover{
+    color: aqua;
+}
+
+.home-container{
+    background-position: center;
+    background-size: cover;
+    background-image: url("../img/home-background.jpg");
+    display: block;
+    height: 800px;
+    margin-top: -20px;
+}
+
+.home-body-title{
+    font-size: 60px;
+    color: white;
+    padding-left: 70px;
+    padding-top: 135px;
+}
+
+.home-body-head{
+    color: white;
+    font-size: 20px;
+    padding-top: 30px;
+    padding-left: 70px;
+}
+
+.btn-homepage {
+    margin-left: 75px !important;
+    margin-top: 16px;
+    height: 50px;
+    border: 0px !important;
+}
+
+.modal-title{
+    text-align: center;
+    font-size: 25px;
+}
+
+.modal-dialog{
+    width: 355px;
+    margin-top: 100px;
+}
+
+.sigin-form-pass{
+    margin-top: 15px;
+}
+
+.signin-form{
+    font-size: 18px;
+}
+
+.signin-bot-space{
+    margin-bottom: 12px;
+}
+
+.signup-link{
+    font-size: 18px;
+    margin-right: 80px;
+}
+
+.signin-message {
+    color: red;
+}
+
+.page-body {
+    background-color: #F4F4F9;
+    width: 100%;
+    height: 800px;
+    margin-top: -20px;
+}
+
+.page-content{
+    width: 60%;
+    background-color: white;
+    border-top: 4px solid deepskyblue;
+    margin-left: 20%;
+    height: 400px;
+}
+
+.page-mid-space{
+    height: 5%;
+}
+
+.about-content{
+    margin-top: 20px;
+    margin-left: 6%;
+    font-size: 30px;
+}
+
+.contact-content{
+    margin-top: 20px;
+    margin-left: 6%;
+    font-size: 30px;
+    width: 83%;
+}
+
+.contact-message{
+    margin-top: 30px;
+}
+
+.contact-textarea{
+    height: 155px!important;
+}
+
+.contact-message-center{
+    text-align: center;
+}
+
+.welcome-user{
+    text-align: center!important;
+    width: 160px !important;
+}
+
+.welcome-user .icon{
+    color: orange!important;
+}
+
+.welcome-user span{
+    color: red!important;
 }

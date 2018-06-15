@@ -4,8 +4,8 @@
   "version": "0.1.0",
   "author": "storm",
   "dependencies": {
+    "axios": "^0.18.0",
     "bootstrap": "^4.1.1",
-    "mdbreact": "^4.4.0",
     "prop-types": "^15.6.1",
     "react": "^16.3.2",
     "react-bootstrap": "^0.32.1",

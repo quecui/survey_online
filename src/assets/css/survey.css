@@ -111,6 +111,10 @@
     height: 400px;
 }
 
+.design-page{
+    height: 700px!important;
+}
+
 .page-mid-space{
     height: 5%;
 }
@@ -184,6 +188,109 @@ tr:nth-child(even) {
     margin-top: 5px;
 }
 
-.vd{
+.design-survey{
+    height: 10%!important;
+    width: 60%;
+    margin-left: 20%;
+    padding-top: 41px;
+    font-size: 25px;
+}
+
+.btn-save-survey{
+    margin-left: 65%;
+    width: 83px;
+    margin-bottom: 5px;
+}
+
+.design-survey .icon{
+    font-size: 15px!important;
+    color: red !important;
+}
+
+.design-survey .icon:hover{
+    cursor: pointer;
+}
+
+.edit-survey-input{
+    float: left;
+}
+
+.edit-setting{
+    font-size: 15px;
+    margin-left: 5px;
+    font-weight: 600;
+}
+
+.edit-setting:hover{
+    cursor: pointer;
+    color: blue;
+}
+
+.toolbox{
+    font-size: 15px;
+    margin-left: 30px;
+}
+
+.edit-design{
     margin-top: 10px;
+}
+
+.edit-toolbox{
+    width: 20%;
+    border: 1px solid #00BFFF;
+    float: left;
+}
+
+.edit-show{
+    height: 400px;
+    margin-left: 21%;
+    width: 79%;
+    border: 1px solid orange;
+}
+
+.toolbox-table{
+    margin-top: 0px!important;
+    width: 100%;
+}
+
+.toolbox-table span{
+    margin-left: 5%;
+    font-size: 17px;
+}
+
+.btn-add-page{
+    margin-left: 59%;
+}
+
+.edit-page-list{
+    margin-top: 5px;
+    margin-left: 1%;
+    width: 98%;
+    height: 35px;
+    border-bottom: 1px solid yellowgreen;
+}
+
+.setting-title{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.show-area{
+    margin-top: 0%;
+    width: 98%;
+    margin-left: 1%;
+}
+
+.show-component{
+    position: relative;
+    top: -11px;
+}
+
+.remove-page{
+    margin-left: 98%;
+}
+
+.remove-page:hover{
+    color: red;
+    cursor: pointer;
 }

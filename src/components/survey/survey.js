@@ -1,50 +1,47 @@
 import React from 'react'
-import {Button} from 'react-bootstrap'
+import SurveyList from './surveyList'
+import DesignSurvey from './designSurvey'
+import PropTypes from "prop-types"
 
 class Survey extends React.Component {
+    static propTypes = {
+        // signIn: PropTypes.func.isRequired
+
+    }
+
     constructor(props, context) {
         super(props, context)
         this.props = props;
+
+        this.state = {
+            editView: false,
+            mainView: true
+        }
+
+        this.changeView = this.changeView.bind(this)
+    }
+
+    changeView(key){
+        switch (key){
+            case 1:
+                this.setState({editView: true})
+                this.setState({mainView: false})
+                break
+            case 2:
+                this.setState({mainView: true})
+                this.setState({editView: false})
+                break
+            default:
+                this.setState({mainView: true})
+                this.setState({editView: false})
+        }
     }
 
     render() {
         return (
             <div className="page-body">
-                <div className={'page-mid-space'} />
-                <div className="page-content">
-                    <div className={'survey-content'}>
-                        <Button bsStyle="success">Create Survey</Button>
-                        <table>
-                            <tbody>
-                            <tr>
-                                <td className="survey-name">
-                                    <b>Survey 1234</b>
-                                </td>
-                                <td>
-                                    <Button className={'btn-survey'} bsStyle="info"><b>Get URL</b></Button>
-                                    <Button className={'btn-survey'} bsStyle="info"><b>Edit</b></Button>
-                                    <Button className={'btn-survey'} bsStyle="info"><b>Pulish</b></Button>
-                                    <Button className={'btn-survey'} bsStyle="info"><b>Result</b></Button>
-                                    <Button className={'btn-survey'} bsStyle="danger"><b>Delete</b></Button>
-                                </td>
-                            </tr>
-
-                            <tr className={'vd'}>
-                                <td className="survey-name">
-                                    <b>Survey 1234</b>
-                                </td>
-                                <td>
-                                    <Button className={'btn-survey'} bsStyle="info"><b>Get URL</b></Button>
-                                    <Button className={'btn-survey'} bsStyle="info"><b>Edit</b></Button>
-                                    <Button className={'btn-survey'} bsStyle="info"><b>Pulish</b></Button>
-                                    <Button className={'btn-survey'} bsStyle="info"><b>Result</b></Button>
-                                    <Button className={'btn-survey'} bsStyle="danger"><b>Delete</b></Button>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                {this.state.mainView === true ? <SurveyList changeView={this.changeView}/>: ''}
+                {this.state.editView === true ? <DesignSurvey changeView={this.changeView}/> : ''}
             </div>
         )
     }

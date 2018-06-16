@@ -6,6 +6,14 @@ import {Button, FormControl, InputGroup, ButtonToolbar, ButtonGroup} from 'react
 import SurveySettingModal from './modalSurveySetting'
 import * as surveyUtils from '../../utils/survey'
 import SingleText from './surveyComponent/singletext'
+import Birthdate from './surveyComponent/birthdate'
+import Checkbox from './surveyComponent/checkbox'
+import Color from './surveyComponent/color'
+import Comment from './surveyComponent/comment'
+import Dropbox from './surveyComponent/dropbox'
+import Matrix from './surveyComponent/matrix'
+import Email from './surveyComponent/email'
+import Number from './surveyComponent/number'
 
 class DesignSurvey extends React.Component {
     static propTypes = {
@@ -30,6 +38,8 @@ class DesignSurvey extends React.Component {
         this.addPage = this.addPage.bind(this)
         this.removePage = this.removePage.bind(this)
         this.addComponent = this.addComponent.bind(this)
+        this.delete = this.delete.bind(this)
+        this.moveComponent = this.moveComponent.bind(this)
     }
 
     setShowSetting(value){
@@ -67,6 +77,34 @@ class DesignSurvey extends React.Component {
         this.setState({pages: tmpPages})
     }
 
+    delete(componentIndex){
+        const tmpPages = this.state.pages
+        tmpPages[this.state.pageIndex].data.splice(componentIndex, 1)
+        this.setState({pages: tmpPages})
+    }
+
+    moveComponent(componentIndex, key){
+        const tmpPages = this.state.pages
+        const tmpComponent = tmpPages[this.state.pageIndex].data[componentIndex]
+        // Up
+        if(key === 1) {
+            if(componentIndex > 0) {
+                tmpPages[this.state.pageIndex].data[componentIndex] =  tmpPages[this.state.pageIndex].data[componentIndex - 1]
+                tmpPages[this.state.pageIndex].data[componentIndex - 1] = tmpComponent
+            }
+        }
+
+        // Down
+        if(key === 2){
+            if(componentIndex < tmpPages[this.state.pageIndex].data.length - 1){
+                tmpPages[this.state.pageIndex].data[componentIndex] =  tmpPages[this.state.pageIndex].data[componentIndex + 1]
+                tmpPages[this.state.pageIndex].data[componentIndex + 1] = tmpComponent
+            }
+        }
+
+        this.setState({pages: tmpPages})
+    }
+
     render() {
         return(
             <span>
@@ -94,25 +132,28 @@ class DesignSurvey extends React.Component {
                                         <td><span onClick={e => this.addComponent(1)}><span className="glyphicon glyphicon-text-width"/> Single Text</span></td>
                                     </tr>
                                     <tr>
+                                        <td><span onClick={e => this.addComponent(9)}><span className="glyphicon glyphicon-sound-7-1"/> Number</span></td>
+                                    </tr>
+                                    <tr>
                                         <td><span onClick={e => this.addComponent(2)}><span className="glyphicon glyphicon-calendar"/> Birthdate</span></td>
                                     </tr>
                                     <tr>
-                                        <td><span><span className="glyphicon glyphicon-certificate"/> Color</span></td>
+                                        <td><span onClick={e => this.addComponent(3)}><span className="glyphicon glyphicon-certificate"/> Color</span></td>
                                     </tr>
                                     <tr>
-                                        <td><span><span className="icon glyphicon glyphicon-envelope"/> Email</span></td>
+                                        <td><span onClick={e => this.addComponent(4)}><span className="icon glyphicon glyphicon-envelope"/> Email</span></td>
                                     </tr>
                                     <tr>
-                                        <td><span><span className="glyphicon glyphicon-check"/> Checkbox</span></td>
+                                        <td><span onClick={e => this.addComponent(5)}><span className="glyphicon glyphicon-check"/> Checkbox</span></td>
                                     </tr>
                                     <tr>
-                                        <td><span><span className="glyphicon glyphicon-triangle-bottom"/> Dropdown</span></td>
+                                        <td><span onClick={e => this.addComponent(6)}><span className="glyphicon glyphicon-triangle-bottom"/> Dropdown</span></td>
                                     </tr>
                                     <tr>
-                                        <td><span><span className="glyphicon glyphicon-comment"/> Comment</span></td>
+                                        <td><span onClick={e => this.addComponent(7)}><span className="glyphicon glyphicon-comment"/> Comment</span></td>
                                     </tr>
                                     <tr>
-                                        <td><span><span className="glyphicon glyphicon-th-large"/> Matrix</span></td>
+                                        <td><span onClick={e => this.addComponent(8)}><span className="glyphicon glyphicon-th-large"/> Matrix</span></td>
                                     </tr>
                                 </table>
                             </div>
@@ -135,7 +176,15 @@ class DesignSurvey extends React.Component {
                                                     <div>
                                                         {page.data.map((component, i) => (
                                                             <span>
-                                                                <div>{component.type === 1 ? <SingleText />: ''}</div>
+                                                                <div>{component.type === 1 ? <SingleText move={this.moveComponent} index={i} delete={this.delete}/>: ''}</div>
+                                                                <div>{component.type === 2 ? <Birthdate move={this.moveComponent} index={i} delete={this.delete}/>: ''}</div>
+                                                                <div>{component.type === 5 ? <Checkbox move={this.moveComponent} index={i} delete={this.delete}/>: ''}</div>
+                                                                <div>{component.type === 3 ? <Color move={this.moveComponent} index={i} delete={this.delete}/>: ''}</div>
+                                                                <div>{component.type === 7 ? <Comment move={this.moveComponent} index={i} delete={this.delete}/>: ''}</div>
+                                                                <div>{component.type === 6 ? <Dropbox move={this.moveComponent} index={i} delete={this.delete}/>: ''}</div>
+                                                                <div>{component.type === 4 ? <Email move={this.moveComponent} index={i} delete={this.delete} />: ''}</div>
+                                                                <div>{component.type === 8 ? <Matrix move={this.moveComponent} index={i} delete={this.delete}/>: ''}</div>
+                                                                <div>{component.type === 9 ? <Number move={this.moveComponent} index={i} delete={this.delete}/>: ''}</div>
                                                             </span>
                                                         ))}
                                                     </div>

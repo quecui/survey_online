@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import {ControlLabel, InputGroup, FormControl} from 'react-bootstrap'
 import PropTypes from "prop-types";
 
-class SingleText extends React.Component {
+class Matrix extends React.Component {
     static propTypes = {
         delete: PropTypes.func.isRequired,
         move: PropTypes.func.isRequired,
@@ -21,7 +21,7 @@ class SingleText extends React.Component {
             <div className={'component-survey'}>
                 <div className={'single-text'}>
                     <div className={'single-text-name'}>
-                        <ControlLabel className={'signin-form'}>Single Text</ControlLabel>
+                        <ControlLabel className={'signin-form'}>Matrix</ControlLabel>
                         <span className={'select-type-text'}>
                              <input type={'checkbox'}></input> Required
                              <span onClick={e => this.props.move(this.props.index, 1)}><span className="glyphicon glyphicon-triangle-top" />Up</span>
@@ -50,4 +50,4 @@ const mapStateToProps = (state) => ({})
 
 const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch)
 
-export default connect(mapStateToProps, mapDispatchToProps)(SingleText)
+export default connect(mapStateToProps, mapDispatchToProps)(Matrix)

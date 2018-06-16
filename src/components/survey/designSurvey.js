@@ -1,9 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import {Button, FormControl, InputGroup, ButtonGroup, ButtonToolbar} from 'react-bootstrap'
-import SurveySettingModal from './modalSurveySetting'
 import PropTypes from "prop-types";
+import {Button, FormControl, InputGroup, ButtonToolbar, ButtonGroup} from 'react-bootstrap'
+import SurveySettingModal from './modalSurveySetting'
+import * as surveyUtils from '../../utils/survey'
+import SingleText from './surveyComponent/singletext'
 
 class DesignSurvey extends React.Component {
     static propTypes = {
@@ -27,6 +29,7 @@ class DesignSurvey extends React.Component {
         this.saveSetting = this.saveSetting.bind(this)
         this.addPage = this.addPage.bind(this)
         this.removePage = this.removePage.bind(this)
+        this.addComponent = this.addComponent.bind(this)
     }
 
     setShowSetting(value){
@@ -51,8 +54,17 @@ class DesignSurvey extends React.Component {
         if(this.state.pages.length > 1){
             const tmpPages = this.state.pages
             tmpPages.splice(this.state.pageIndex, 1)
+            if(this.state.pageIndex >= tmpPages.length) {
+                this.setState({pageIndex: this.state.pageIndex - 1})
+            }
+
             this.setState({pages: tmpPages})
         }
+    }
+
+    addComponent(key){
+        const tmpPages = surveyUtils.addComponent(key, this.state.pages, this.state.pageIndex)
+        this.setState({pages: tmpPages})
     }
 
     render() {
@@ -79,10 +91,10 @@ class DesignSurvey extends React.Component {
                             <div className={'edit-toolbox'}>
                                 <table className={'toolbox-table'}>
                                     <tr>
-                                        <td><span><span className="glyphicon glyphicon-text-width"/> Single Text</span></td>
+                                        <td><span onClick={e => this.addComponent(1)}><span className="glyphicon glyphicon-text-width"/> Single Text</span></td>
                                     </tr>
                                     <tr>
-                                        <td><span><span className="glyphicon glyphicon-calendar"/> Birthdate</span></td>
+                                        <td><span onClick={e => this.addComponent(2)}><span className="glyphicon glyphicon-calendar"/> Birthdate</span></td>
                                     </tr>
                                     <tr>
                                         <td><span><span className="glyphicon glyphicon-certificate"/> Color</span></td>
@@ -119,7 +131,15 @@ class DesignSurvey extends React.Component {
                                     <span className={'show-component'}>
                                         {this.state.pages.map((page, index) => (
                                             <div>
-                                                {this.state.pageIndex === index ? <p>{index}</p>: ''}
+                                                {this.state.pageIndex === index ?
+                                                    <div>
+                                                        {page.data.map((component, i) => (
+                                                            <span>
+                                                                <div>{component.type === 1 ? <SingleText />: ''}</div>
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                    : ''}
                                             </div>
                                         ))}
                                     </span>

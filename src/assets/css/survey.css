@@ -100,7 +100,7 @@
 .page-body {
     background-color: #F4F4F9;
     width: 100%;
-    height: 1000px;
+    height: 800px;
     margin-top: -20px;
 }
 
@@ -113,7 +113,7 @@
 }
 
 .design-page{
-    height: 850px!important;
+    height: 700px!important;
 }
 
 .page-mid-space{
@@ -243,7 +243,8 @@ tr:nth-child(even) {
 }
 
 .edit-show{
-    height: 750px;
+    overflow: auto;
+    height: 550px;
     margin-left: 21%;
     width: 79%;
     border: 1px solid orange;
@@ -265,7 +266,8 @@ tr:nth-child(even) {
 }
 
 .btn-add-page{
-    margin-left: 59%;
+    margin-left: 48%;
+    margin-right: 5px;
 }
 
 .edit-page-list{
@@ -355,3 +357,130 @@ tr:nth-child(even) {
     color: darkred;
     text-decoration: underline;
 }
+
+.icon-btn{
+    color: green;
+}
+
+.option-answer{
+    margin-top: 20px;
+}
+
+.glyphicon-plus-sign{
+    color: blue;
+    font-size: 24px;
+    margin-left: 72%;
+}
+
+.glyphicon-plus-sign:hover{
+    cursor: pointer;
+    color: blue;
+    font-size: 24px;
+    margin-left: 72%;
+}
+
+.option-answer-content table{
+    width: 62%;
+}
+
+.table-left{
+    margin-top: 0px!important;
+    width: 47% !important;
+    float: left;
+    display: inline-block;
+}
+
+
+.table-right{
+    width: 47% !important;
+    display: inline-block;
+    margin-top: 0px!important;
+}
+
+.table-right tr:nth-child(even) {
+    background-color: white;
+    margin-top: 5px;
+}
+
+.table-left tr:nth-child(even) {
+    background-color: white;
+    margin-top: 5px;
+}
+
+.matrix-input{
+    width: 110%;
+}
+
+.matrix-add{
+    margin-left: 0%;
+    color: orange;
+}
+
+.matrix-add:hover{
+    color: green;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.matrix{
+    margin-top: -22px;
+}
+
+.clear{
+    height: 20px;
+    float: none;
+    margin-bottom: 20px;
+}
+
+.do-survey-body{
+    width: 90%;
+    margin-left: 5%;
+    margin-top: 30px;
+    overflow: auto;
+    height: 600px;
+}
+
+.run-survey{
+    width: 100%;
+}
+
+.do-singletext{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.checkbox-survey{
+    margin-right: 30px;
+}
+
+.checkbox-survey{
+    margin-left: 10px;
+}
+
+.dropbox-survey{
+    width: 75%;
+}
+
+.glyphicon-arrow-right{
+    color: green;
+    float: right;
+    font-size: 30px;
+    cursor: pointer;
+    margin-left: 90%;
+}
+
+.glyphicon-arrow-left{
+    color: green;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.confirm-delete{
+    font-size: 20px !important;
+}
+
+.publish-confirm{
+    font-size: 18px;
+    color: red;
+}
+

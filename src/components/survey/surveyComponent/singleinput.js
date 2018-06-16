@@ -1,19 +1,29 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import {ControlLabel, InputGroup, FormControl} from 'react-bootstrap'
+import {ControlLabel, InputGroup, FormControl, Button} from 'react-bootstrap'
 import PropTypes from "prop-types";
 
-class Comment extends React.Component {
+class SingleInput extends React.Component {
     static propTypes = {
         delete: PropTypes.func.isRequired,
         move: PropTypes.func.isRequired,
-        index: PropTypes.number.isRequired
+        handleValue: PropTypes.func.isRequired,
+        index: PropTypes.number.isRequired,
+        data: PropTypes.object.isRequired,
+        question: PropTypes.string.isRequired
     }
 
     constructor(props, context) {
         super(props, context)
         this.props = props;
+
+        this.handleChange = this.handleChange.bind(this)
+    }
+
+    handleChange(question){
+        const tmp = this.props.data
+        tmp.component.question = question
+
+        this.props.handleValue(this.props.index, tmp)
     }
 
     render() {
@@ -21,7 +31,7 @@ class Comment extends React.Component {
             <div className={'component-survey'}>
                 <div className={'single-text'}>
                     <div className={'single-text-name'}>
-                        <ControlLabel className={'signin-form'}>Comment</ControlLabel>
+                        <ControlLabel className={'signin-form'}>{this.props.data.name}</ControlLabel>
                         <span className={'select-type-text'}>
                              <input type={'checkbox'}></input> Required
                              <span onClick={e => this.props.move(this.props.index, 1)}><span className="glyphicon glyphicon-triangle-top" />Up</span>
@@ -31,9 +41,11 @@ class Comment extends React.Component {
                     <div className={'single-text-input'}>
                         <div className={'text-question'}>
                             <InputGroup>
-                                <InputGroup.Addon><span className="glyphicon glyphicon-pencil" /></InputGroup.Addon>
+                                <InputGroup.Button><Button><span className="icon-btn glyphicon glyphicon-pencil" /></Button></InputGroup.Button>
                                 <FormControl
                                     type="text"
+                                    value={this.props.question}
+                                    onChange={e => this.handleChange(e.target.value)}
                                     placeholder="Input your question here" />
                                 <FormControl.Feedback />
                             </InputGroup>
@@ -46,8 +58,4 @@ class Comment extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => ({})
-
-const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch)
-
-export default connect(mapStateToProps, mapDispatchToProps)(Comment)
+export default SingleInput

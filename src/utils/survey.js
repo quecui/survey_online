@@ -1,8 +1,10 @@
 export function addNumber(componentArr, pageIndex) {
     const data = {
         type: 9,
+        name: 'Number',
         component: {
-            question: 'Which number do you like ?'
+            question: 'Which number do you like ?',
+            answer: ''
         },
         required: 'none'
     }
@@ -14,8 +16,13 @@ export function addNumber(componentArr, pageIndex) {
 export function addMatrix(componentArr, pageIndex) {
     const data = {
         type: 8,
+        name: 'Matrix',
         component: {
-            question: 'Which color do you like ?'
+            question: 'Which color do you like ?',
+            rowOptions: ['car', 'mobile'],
+            colOptions: ['hard', 'grass'],
+            numberChange: 0,
+            answer: ''
         },
         required: 'none'
     }
@@ -27,8 +34,10 @@ export function addMatrix(componentArr, pageIndex) {
 export function addComment(componentArr, pageIndex) {
     const data = {
         type: 7,
+        name: 'Commnent',
         component: {
-            question: 'Which color do you like ?'
+            question: 'Which color do you like ?',
+            answer: ''
         },
         required: 'none'
     }
@@ -40,9 +49,12 @@ export function addComment(componentArr, pageIndex) {
 export function addDropbox(componentArr, pageIndex) {
     const data = {
         type: 6,
+        name: 'Dropbox',
         component: {
             question: 'Which color do you like ?',
-            options: ['yellow', 'red', 'grey']
+            options: ['yellow', 'red', 'grey'],
+            numberChange: 0,
+            answer: ''
         },
         required: 'none'
     }
@@ -54,9 +66,12 @@ export function addDropbox(componentArr, pageIndex) {
 export function addCheckbox(componentArr, pageIndex) {
     const data = {
         type: 5,
+        name: 'Checkbox',
         component: {
             question: 'Which color do you like ?',
-            options: ['yellow', 'red', 'grey']
+            options: ['yellow', 'red', 'grey'],
+            numberChange: 0,
+            answer: ''
         },
         required: 'none'
     }
@@ -68,8 +83,10 @@ export function addCheckbox(componentArr, pageIndex) {
 export function addEmail(componentArr, pageIndex) {
     const data = {
         type: 4,
+        name: 'Email',
         component: {
-            question: 'What is your email ?'
+            question: 'What is your email ?',
+            answer: ''
         },
         required: 'string'
     }
@@ -81,8 +98,10 @@ export function addEmail(componentArr, pageIndex) {
 export function addColor(componentArr, pageIndex) {
     const data = {
         type: 3,
+        name: 'Color',
         component: {
-            question: 'Which color do you like ?'
+            question: 'Which color do you like ?',
+            answer: ''
         },
         required: 'string'
     }
@@ -94,8 +113,10 @@ export function addColor(componentArr, pageIndex) {
 export function addSingleText(componentArr, pageIndex) {
     const data = {
         type: 1,
+        name: 'SingleText',
         component: {
-            question: 'What is your name?'
+            question: 'What is your name?',
+            answer: ''
         },
         required: 'string'
     }
@@ -107,8 +128,10 @@ export function addSingleText(componentArr, pageIndex) {
 export function addBirthdate(componentArr, pageIndex) {
     const data = {
         type: 2,
+        name: 'Birthdate',
         component: {
-            question: 'When was you born ?'
+            question: 'When was you born ?',
+            answer: ''
         },
         required: 'string'
     }

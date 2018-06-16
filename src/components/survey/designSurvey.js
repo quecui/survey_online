@@ -5,15 +5,10 @@ import PropTypes from "prop-types";
 import {Button, FormControl, InputGroup, ButtonToolbar, ButtonGroup} from 'react-bootstrap'
 import SurveySettingModal from './modalSurveySetting'
 import * as surveyUtils from '../../utils/survey'
-import SingleText from './surveyComponent/singletext'
-import Birthdate from './surveyComponent/birthdate'
+import SingleInput from './surveyComponent/singleinput'
 import Checkbox from './surveyComponent/checkbox'
-import Color from './surveyComponent/color'
-import Comment from './surveyComponent/comment'
-import Dropbox from './surveyComponent/dropbox'
 import Matrix from './surveyComponent/matrix'
-import Email from './surveyComponent/email'
-import Number from './surveyComponent/number'
+import RunSurvey from './runSurvey'
 
 class DesignSurvey extends React.Component {
     static propTypes = {
@@ -30,7 +25,10 @@ class DesignSurvey extends React.Component {
             timeTarget: '',
 
             pages: this.props.survey.pages,
-            pageIndex: 0
+            survey: this.props.survey,
+            pageIndex: 0,
+
+            trailer: false
         }
 
         this.setShowSetting = this.setShowSetting.bind(this)
@@ -40,6 +38,9 @@ class DesignSurvey extends React.Component {
         this.addComponent = this.addComponent.bind(this)
         this.delete = this.delete.bind(this)
         this.moveComponent = this.moveComponent.bind(this)
+        this.handleChangeData = this.handleChangeData.bind(this)
+        this.showTrailer = this.showTrailer.bind(this)
+        this.changeSurveyName = this.changeSurveyName.bind(this)
     }
 
     setShowSetting(value){
@@ -105,6 +106,23 @@ class DesignSurvey extends React.Component {
         this.setState({pages: tmpPages})
     }
 
+    handleChangeData(componentIndex, data){
+        const tmpPages = this.state.pages
+        tmpPages[this.state.pageIndex].data[componentIndex] = data
+        this.setState({pages: tmpPages})
+    }
+
+    showTrailer(value){
+        this.setState({trailer: value})
+    }
+
+    changeSurveyName(value){
+        const tmp = this.state.survey
+        tmp.name = value
+
+        this.setState({survey: tmp})
+    }
+
     render() {
         return(
             <span>
@@ -112,79 +130,104 @@ class DesignSurvey extends React.Component {
                     <InputGroup className={'edit-survey-input'}>
                         <FormControl
                             type="text"
-                            value="Hard Grass"
+                            value={this.props.survey.name}
+                            onChange={e => this.changeSurveyName(e.target.value)}
                             placeholder="Input survey name here"/>
                     </InputGroup>
+                    {this.state.trailer === false ?
+                        <Button className={'btn-save-survey'}>Save</Button>:
+                        <Button onClick={e => this.showTrailer(false)} className={'btn-save-survey'}>Back</Button>
+                    }
 
-                    <Button className={'btn-save-survey'}>Save</Button>
                 </div>
                 <div className="page-content design-page">
-                    <div className={'survey-content'}>
-                        <span className={'toolbox'}><b>TOOL BOX</b></span>
-                        <span className={'btn-add-page'}><Button onClick={e => this.addPage()}><span className="glyphicon glyphicon-plus"/> Add Page</Button></span>
-                        <span className={'edit-setting'}><Button onClick={e => this.setShowSetting(true)}><span className="glyphicon glyphicon-cog"/> Setting</Button></span>
-                        {this.state.showSettingModal === true ? <SurveySettingModal save={this.saveSetting} show={this.setShowSetting}/>: ''}
+                    {this.state.trailer === true ?
+                        <RunSurvey data={this.state.pages} trailer={'true'}/>
+                        :
+                        <div className={'survey-content'}>
+                            <span className={'toolbox'}><b>TOOL BOX</b></span>
+                            <span className={'btn-add-page'}><Button onClick={e => this.addPage()}><span className="glyphicon glyphicon-plus"/> Add Page</Button></span>
+                            <Button onClick={e => this.showTrailer(true)}><span className="glyphicon glyphicon-expand"/> Trailer</Button>
+                            <span className={'edit-setting'}><Button onClick={e => this.setShowSetting(true)}><span className="glyphicon glyphicon-cog"/> Setting</Button></span>
+                            {this.state.showSettingModal === true ? <SurveySettingModal save={this.saveSetting} show={this.setShowSetting}/>: ''}
 
-                        <div className={'edit-design'}>
-                            <div className={'edit-toolbox'}>
-                                <table className={'toolbox-table'}>
-                                    <tr>
-                                        <td><span onClick={e => this.addComponent(1)}><span className="glyphicon glyphicon-text-width"/> Single Text</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span onClick={e => this.addComponent(9)}><span className="glyphicon glyphicon-sound-7-1"/> Number</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span onClick={e => this.addComponent(2)}><span className="glyphicon glyphicon-calendar"/> Birthdate</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span onClick={e => this.addComponent(3)}><span className="glyphicon glyphicon-certificate"/> Color</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span onClick={e => this.addComponent(4)}><span className="icon glyphicon glyphicon-envelope"/> Email</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span onClick={e => this.addComponent(5)}><span className="glyphicon glyphicon-check"/> Checkbox</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span onClick={e => this.addComponent(6)}><span className="glyphicon glyphicon-triangle-bottom"/> Dropdown</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span onClick={e => this.addComponent(7)}><span className="glyphicon glyphicon-comment"/> Comment</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span onClick={e => this.addComponent(8)}><span className="glyphicon glyphicon-th-large"/> Matrix</span></td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div className={'edit-show'}>
-                                <div className={'edit-page-list'}>
-                                    <ButtonToolbar>
-                                        <ButtonGroup>
-                                            {this.state.pages.map((page, index) => (
-                                                <Button onClick={e => this.setState({pageIndex: index})}>Page {index + 1}</Button>
-                                            ))}
-                                        </ButtonGroup>
-                                    </ButtonToolbar>
+                            <div className={'edit-design'}>
+                                <div className={'edit-toolbox'}>
+                                    <table className={'toolbox-table'}>
+                                        <tr>
+                                            <td><span onClick={e => this.addComponent(1)}><span className="glyphicon glyphicon-text-width"/> Single Text</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span onClick={e => this.addComponent(9)}><span className="glyphicon glyphicon-sound-7-1"/> Number</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span onClick={e => this.addComponent(2)}><span className="glyphicon glyphicon-calendar"/> Birthdate</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span onClick={e => this.addComponent(3)}><span className="glyphicon glyphicon-certificate"/> Color</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span onClick={e => this.addComponent(4)}><span className="icon glyphicon glyphicon-envelope"/> Email</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span onClick={e => this.addComponent(5)}><span className="glyphicon glyphicon-check"/> Checkbox</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span onClick={e => this.addComponent(6)}><span className="glyphicon glyphicon-triangle-bottom"/> Dropdown</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span onClick={e => this.addComponent(7)}><span className="glyphicon glyphicon-comment"/> Comment</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span onClick={e => this.addComponent(8)}><span className="glyphicon glyphicon-th-large"/> Matrix</span></td>
+                                        </tr>
+                                    </table>
                                 </div>
-                                <div className={'show-area'}>
-                                    <span onClick={e => this.removePage()} className="remove-page glyphicon glyphicon-remove"></span>
-                                    <span className={'show-component'}>
+                                <div className={'edit-show'}>
+                                    <div className={'edit-page-list'}>
+                                        <ButtonToolbar>
+                                            <ButtonGroup>
+                                                {this.state.pages.map((page, index) => (
+                                                    <Button onClick={e => this.setState({pageIndex: index})}>Page {index + 1}</Button>
+                                                ))}
+                                            </ButtonGroup>
+                                        </ButtonToolbar>
+                                    </div>
+                                    <div className={'show-area'}>
+                                        <span onClick={e => this.removePage()} className="remove-page glyphicon glyphicon-remove"></span>
+                                        <span className={'show-component'}>
                                         {this.state.pages.map((page, index) => (
                                             <div>
                                                 {this.state.pageIndex === index ?
                                                     <div>
                                                         {page.data.map((component, i) => (
                                                             <span>
-                                                                <div>{component.type === 1 ? <SingleText move={this.moveComponent} index={i} delete={this.delete}/>: ''}</div>
-                                                                <div>{component.type === 2 ? <Birthdate move={this.moveComponent} index={i} delete={this.delete}/>: ''}</div>
-                                                                <div>{component.type === 5 ? <Checkbox move={this.moveComponent} index={i} delete={this.delete}/>: ''}</div>
-                                                                <div>{component.type === 3 ? <Color move={this.moveComponent} index={i} delete={this.delete}/>: ''}</div>
-                                                                <div>{component.type === 7 ? <Comment move={this.moveComponent} index={i} delete={this.delete}/>: ''}</div>
-                                                                <div>{component.type === 6 ? <Dropbox move={this.moveComponent} index={i} delete={this.delete}/>: ''}</div>
-                                                                <div>{component.type === 4 ? <Email move={this.moveComponent} index={i} delete={this.delete} />: ''}</div>
-                                                                <div>{component.type === 8 ? <Matrix move={this.moveComponent} index={i} delete={this.delete}/>: ''}</div>
-                                                                <div>{component.type === 9 ? <Number move={this.moveComponent} index={i} delete={this.delete}/>: ''}</div>
+                                                                <div>
+                                                                    {component.type === 1 || component.type === 2 || component.type === 3 || component.type === 7 || component.type === 4 || component.type === 9 ?
+                                                                        <SingleInput
+                                                                            question={component.component.question}
+                                                                            data={component}
+                                                                            handleValue={this.handleChangeData}
+                                                                            move={this.moveComponent}
+                                                                            index={i}
+                                                                            delete={this.delete}/>: ''}</div>
+                                                                <div>{component.type === 5 || component.type === 6 ?
+                                                                    <Checkbox
+                                                                        numberChange={component.component.numberChange}
+                                                                        question={component.component.question}
+                                                                        data={component}
+                                                                        handleValue={this.handleChangeData}
+                                                                        move={this.moveComponent}
+                                                                        index={i}
+                                                                        delete={this.delete}/>: ''}</div>
+                                                                <div>{component.type === 8 ?
+                                                                    <Matrix
+                                                                        numberChange={component.component.numberChange}
+                                                                        data={component}
+                                                                        handleValue={this.handleChangeData}
+                                                                        move={this.moveComponent}
+                                                                        index={i}
+                                                                        delete={this.delete}/>: ''}</div>
                                                             </span>
                                                         ))}
                                                     </div>
@@ -192,10 +235,12 @@ class DesignSurvey extends React.Component {
                                             </div>
                                         ))}
                                     </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+
+                    }
                 </div>
             </span>
         )

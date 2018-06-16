@@ -23,7 +23,7 @@ router.route('/getAll')
 router.route('/statistical')
   .post(surveyController.statisticalSurvey)
 
-// router.route('/notify')
-//   .post(surveyController.notifySurvey)
+router.route('/detail')
+  .post(surveyController.detailSurvey)
   
 module.exports = router;

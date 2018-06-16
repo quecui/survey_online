@@ -7,10 +7,10 @@ function register(req, res) {
 	  password: req.body.password,
 	})
 	user.save(function(err) {
-	  if (err) return res.status('505').json({ message: "Don't create with this username"});
+	  if (err) return res.status('505').json({ message: "Email or username is existed"});
 	  return res.status('200').json(
 		{ 
-		  message: 'ok',
+		  message: 'Success!',
 		  dataReq: {token: user._id, username: user.username} 
 		});
 	})
@@ -24,7 +24,7 @@ function signin (req, res) {
       if (user.password != req.body.password){
         return res.status('404').json({ message: "Password is wrong"});
       }
-      return res.status('200').json({ message: 'ok', dataReq: {token: user._id, username: user.username} });
+      return res.status('200').json({ message: 'Success!', dataReq: {token: user._id, username: user.username} });
     }
   })
 }
@@ -32,9 +32,9 @@ function signin (req, res) {
 function signinRepeat(req, res) {
   User.findOne({_id: req.body.token}, (err, user) => {
     if (err || !user) {
-      return res.status('404').json({message: 'Session Timeout. Please Login'})
+      return res.status('401').json({message: 'Session Timeout. Please Login'})
     }
-    return res.status('200').json({message: 'ok', dataReq: {username: user.username}})
+    return res.status('200').json({message: 'Success!', dataReq: {username: user.username}})
   })
 }
 

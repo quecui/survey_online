@@ -11,7 +11,7 @@ function getSurvey(req, res) {
     .populate('pages')
     .exec((err, survey)=>{
       if (err || !survey) {
-        return res.status('404').json({message: 'Not found!'})
+        return res.status('404').json({message: 'Survey is not exist!'})
       }
       return res.status('200').json({message: "Success!", dataReq: survey})
     })

@@ -128,8 +128,24 @@ export function postAnswer(data) {
     return function (dispatch) {
         surveyAjax.postAnswer(data).then(function (res) {
             alert('Thank you for completing the survey!')
-        }, function () {
+        }, function (err) {
             alert('Error! Please try again')
+        })
+    }
+}
+
+export function showResult(data) {
+    return {type: actionType.SHOW_RESULT, data}
+}
+
+export function getAnswer(data) {
+    return function (dispatch) {
+        surveyAjax.getAnswer(data).then(function (res) {
+            dispatch(showResult(res.data.dataReq))
+            dispatch(changeViewSurvey(3))
+        }, function (err) {
+            alert('Session Timeout')
+            localStorage.clear()
         })
     }
 }

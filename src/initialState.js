@@ -12,5 +12,10 @@ export default {
         ],
     },
 
-    surveyList: []
+    surveyList: [],
+
+    result: {
+        surveyId: '',
+        data: []
+    }
 }

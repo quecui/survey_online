@@ -3,45 +3,77 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {Button, ControlLabel, InputGroup, FormControl} from 'react-bootstrap'
 import PropTypes from "prop-types"
+import ResultJson from './resultJson'
+import ResultChart from './resultChart'
 
 class ResultSurvey extends React.Component {
     static propTypes = {
-        //trailer: PropTypes.string
+        result: PropTypes.object.isRequired
     }
 
     constructor(props, context) {
         super(props, context)
         this.props = props;
 
-        this.handleChange = this.handleChange.bind(this)
+        this.state = {
+            isChangeView : false,
+            surveyId: '',
+            data: [],
+            alert: false
+        }
+
     }
 
-    handleChange(answer){
-        if(this.props.trailer !== 'true'){
-            const tmp = this.props.data
-            tmp.component.answer = answer
-            this.props.handleChangeData(this.props.index, tmp)
+    componentWillMount(){
+        if(this.props.result.length === 0) {
+            this.setState({alert: true})
         }
+
+        if(this.props.result.length > 0 && this.props.result[0].survey_id !== undefined){
+            this.setState({surveyId: this.props.result[0].survey_id})
+
+            const tmp = []
+            // Todo: sai roi. phai tong hop tat ca ket qua
+            this.props.result.map((resultElement) => {
+                resultElement.data.map((page) => {
+                    page.data.map((question) => {
+                        tmp.push(question)
+                    })
+                })
+            })
+
+            this.setState({data: tmp})
+        }
+
+
     }
 
     render() {
         return (
-            <div className={'do-singletext'}>
-                <ControlLabel>{this.props.index + 1}. {this.props.data.component.question}</ControlLabel>
-                <InputGroup>
-                    <InputGroup.Addon><span className="glyphicon glyphicon-pencil" /></InputGroup.Addon>
-                    <FormControl
-                        type="text"
-                        value={this.props.data.component.answer}
-                        onChange={e => this.handleChange(e.target.value)}
-                        placeholder="Input your answer here"/>
-                </InputGroup>
+            <div>
+                <div>
+                    {this.state.alert === true ? '' :
+                        <Button bsStyle="primary" className={'btn-show-chart'}
+                                onClick={e => this.setState({isChangeView: !this.state.isChangeView})}>Show By
+                            Question</Button>
+                    }
+                </div>
+                {this.state.alert === true ? '':
+                    <div>
+                        {this.state.isChangeView === false ?
+                            <ResultJson data={this.state.data} surveyId={this.state.surveyId}/> :
+                            <ResultChart data={this.state.data} surveyId={this.state.surveyId}/>
+                        }
+                    </div>
+                }
             </div>
         )
     }
 }
 
-const mapStateToProps = (state) => ({})
+const mapStateToProps = (state) => ({
+    result: state.result
+})
 
 const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch)
 

@@ -8,6 +8,7 @@ import * as surveyAction from './surveyAction'
 class SurveyList extends React.Component {
     static propTypes = {
         changeView: PropTypes.func.isRequired,
+        getAnswer: PropTypes.func.isRequired,
         publishSurvey: PropTypes.func.isRequired,
         getSurveyUrl: PropTypes.func.isRequired,
         getDetailSurvey: PropTypes.func.isRequired,
@@ -28,6 +29,7 @@ class SurveyList extends React.Component {
         this.publishSurvey = this.publishSurvey.bind(this)
         this.getDetailSurvey = this.getDetailSurvey.bind(this)
         this.getUrl = this.getUrl.bind(this)
+        this.getResult = this.getResult.bind(this)
 
         this.state = {
             showDeleteConfirm: false,
@@ -101,6 +103,15 @@ class SurveyList extends React.Component {
         this.props.getDetailSurvey(data)
     }
 
+    getResult(index){
+        const data = {
+            token: localStorage.getItem('token'),
+            survey_id: this.props.surveyList[index]._id
+        }
+
+        this.props.getAnswer(data)
+    }
+
     render() {
         return (
             <span>
@@ -119,7 +130,7 @@ class SurveyList extends React.Component {
                                         <Button onClick={e => this.getUrl(index)} disabled={!survey.active === true} className={'btn-survey'} bsStyle="info"><b>Get URL</b></Button>
                                         <Button disabled={survey.active === true}onClick={e => this.getDetailSurvey(index)} className={'btn-survey'} bsStyle="info"><b>Edit</b></Button>
                                         <Button disabled={survey.active === true} onClick={e => this.setShowPublishConfirm(index, true)} className={'btn-survey'} bsStyle="info"><b>Pulish</b></Button>
-                                        <Button className={'btn-survey'} bsStyle="info"><b>Result</b></Button>
+                                        <Button onClick={e => this.getResult(index)} className={'btn-survey'} bsStyle="info"><b>Result</b></Button>
                                         <Button onClick={e => this.setShowConfirm(index, true)} className={'btn-survey'} bsStyle="danger"><b>Delete</b></Button>
                                     </td>
                                 </tr>
@@ -193,7 +204,8 @@ const mapDispatchToProps = dispatch => bindActionCreators({
     deleteSurveyFromServer: surveyAction.deleteSurveyFromServer,
     publishSurvey: surveyAction.publishSurvey,
     getDetailSurvey: surveyAction.getDetailSurvey,
-    getSurveyUrl: surveyAction.getSurveyUrl
+    getSurveyUrl: surveyAction.getSurveyUrl,
+    getAnswer: surveyAction.getAnswer
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(SurveyList)

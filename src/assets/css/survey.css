@@ -504,3 +504,41 @@ tr:nth-child(even) {
     width: 121px;
 }
 
+.table-result{
+    border: 1px solid black;
+    width: 100%;
+    text-align: center;
+}
+
+.header-result{
+    border: 1px solid black;
+    text-align: center;
+}
+
+.table-result tr th {
+    text-align: center!important;
+}
+
+.th-table-format{
+    width: 50px;
+}
+
+.table-result tr {
+    border: 1px solid black;
+}
+
+.table-result td {
+    border: 1px solid black;
+}
+
+.content-stt{
+    width: 400px;
+    text-align: left!important;
+}
+
+.btn-show-chart{
+    margin-top: 20px;
+    float: right;
+    margin-bottom: 20px;
+}
+

@@ -51,6 +51,10 @@ class Survey extends Ajax {
     postAnswer(data){
         return this.ajax().post('/answer/answerSurvey', JSON.stringify(data), { headers: { 'Content-Type': 'application/json' } })
     }
+
+    getAnswer(data){
+        return this.ajax().post('/survey/statistical', JSON.stringify(data), { headers: { 'Content-Type': 'application/json' } })
+    }
 }
 
 const surveyAjax = new Survey()

@@ -4,6 +4,7 @@ import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import SurveyList from './surveyList'
 import DesignSurvey from './designSurvey'
+import ResultSurvey from './resultSurvey'
 
 class Survey extends React.Component {
     static propTypes = {
@@ -16,7 +17,8 @@ class Survey extends React.Component {
 
         this.state = {
             editView: false,
-            mainView: true
+            mainView: true,
+            resultView: false
         }
 
         this.changeView = this.changeView.bind(this)
@@ -33,10 +35,17 @@ class Survey extends React.Component {
             case 1:
                 this.setState({editView: true})
                 this.setState({mainView: false})
+                this.setState({resultView: false})
                 break
             case 2:
                 this.setState({mainView: true})
                 this.setState({editView: false})
+                this.setState({resultView: false})
+                break
+            case 3:
+                this.setState({mainView: false})
+                this.setState({editView: false})
+                this.setState({resultView: true})
                 break
             default:
                 this.setState({mainView: true})
@@ -49,6 +58,7 @@ class Survey extends React.Component {
             <div className="page-body">
                 {this.state.mainView === true ? <SurveyList changeView={this.changeView}/>: ''}
                 {this.state.editView === true ? <DesignSurvey changeView={this.changeView}/> : ''}
+                {this.state.resultView === true ? <ResultSurvey changeView={this.changeView}/> : ''}
             </div>
         )
     }

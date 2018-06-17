@@ -7,6 +7,8 @@ import PropTypes from "prop-types";
 class SurveySettingModal extends React.Component {
     static propTypes = {
         show: PropTypes.func.isRequired,
+        target: PropTypes.number.isRequired,
+        time: PropTypes.string.isRequired,
         save: PropTypes.func.isRequired
     }
 
@@ -15,8 +17,8 @@ class SurveySettingModal extends React.Component {
         this.props = props;
 
         this.state = {
-            unitTarget: '',
-            timeTarget: '',
+            unitTarget: this.props.target,
+            timeTarget: this.props.time,
             message: ''
         }
 

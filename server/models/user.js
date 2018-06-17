@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const { hash, compare } = require('bcrypt')
 
 mongoose.Promise = global.Promise
 const Schema = mongoose.Schema

@@ -9,7 +9,8 @@ class SingleInput extends React.Component {
         handleValue: PropTypes.func.isRequired,
         index: PropTypes.number.isRequired,
         data: PropTypes.object.isRequired,
-        question: PropTypes.string.isRequired
+        question: PropTypes.string.isRequired,
+        isRequired: PropTypes.bool.isRequired
     }
 
     constructor(props, context) {
@@ -17,6 +18,14 @@ class SingleInput extends React.Component {
         this.props = props;
 
         this.handleChange = this.handleChange.bind(this)
+        this.changeRequired = this.changeRequired.bind(this)
+    }
+
+    changeRequired(value){
+        const tmp = this.props.data
+        tmp.required = value
+
+        this.props.handleValue(this.props.index, tmp)
     }
 
     handleChange(question){
@@ -33,7 +42,7 @@ class SingleInput extends React.Component {
                     <div className={'single-text-name'}>
                         <ControlLabel className={'signin-form'}>{this.props.data.name}</ControlLabel>
                         <span className={'select-type-text'}>
-                             <input type={'checkbox'}></input> Required
+                             <input onClick={e => this.changeRequired(!this.props.isRequired)} checked={this.props.isRequired} type={'checkbox'}></input> Required
                              <span onClick={e => this.props.move(this.props.index, 1)}><span className="glyphicon glyphicon-triangle-top" />Up</span>
                              <span onClick={e => this.props.move(this.props.index, 2)}><span className="glyphicon glyphicon-triangle-bottom" />Down</span>
                         </span>

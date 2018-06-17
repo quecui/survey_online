@@ -433,11 +433,11 @@ tr:nth-child(even) {
 }
 
 .do-survey-body{
-    width: 90%;
+    /*width: 90%;*/
     margin-left: 5%;
     margin-top: 30px;
     overflow: auto;
-    height: 600px;
+    height: 800px;
 }
 
 .run-survey{
@@ -482,5 +482,25 @@ tr:nth-child(even) {
 .publish-confirm{
     font-size: 18px;
     color: red;
+}
+
+.repeat-password{
+    width: 173px!important;
+}
+
+.do-survey-title{
+    text-align: center;
+    margin-top: 20px;
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+
+.do-page{
+    height: 800px !important;
+}
+
+.submit-do-survey{
+    margin-left: 82%;
+    width: 121px;
 }
 

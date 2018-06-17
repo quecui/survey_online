@@ -1,4 +1,5 @@
 import actionType from '../../constants/ActionTypes'
+import surveyAjax from '../../ajax/survey'
 
 export function showUsernameInHeader(username) {
     return { type: actionType.SHOW_USERNAME, username}
@@ -6,14 +7,24 @@ export function showUsernameInHeader(username) {
 
 export function signIn(data) {
     return function (dispatch) {
-        dispatch(showUsernameInHeader(data.name))
-        localStorage.setItem('userToken','123213')
+        surveyAjax.login(data).then(function (res) {
+            dispatch(showUsernameInHeader(res.data.dataReq.username))
+            alert('SignIn Successfully')
+            localStorage.setItem('token', res.data.dataReq.token)
+        }, function (err) {
+            alert("Account doesn't exist")
+        })
     }
 }
 
-export function getUsernameByToken(token) {
+export function getUsernameByToken(data) {
     return function (dispatch) {
-        dispatch(showUsernameInHeader('StormSpirit'))
+        surveyAjax.getUsernameByToken(data).then(function (res) {
+            dispatch(showUsernameInHeader(res.data.dataReq.username))
+        }, function (err) {
+            dispatch(showUsernameInHeader(''))
+            localStorage.clear()
+        })
     }
 }
 

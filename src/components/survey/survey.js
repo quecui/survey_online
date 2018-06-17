@@ -1,12 +1,13 @@
 import React from 'react'
+import PropTypes from "prop-types"
+import {bindActionCreators} from "redux";
+import {connect} from "react-redux";
 import SurveyList from './surveyList'
 import DesignSurvey from './designSurvey'
-import PropTypes from "prop-types"
 
 class Survey extends React.Component {
     static propTypes = {
-        // signIn: PropTypes.func.isRequired
-
+        header: PropTypes.object.isRequired
     }
 
     constructor(props, context) {
@@ -19,6 +20,12 @@ class Survey extends React.Component {
         }
 
         this.changeView = this.changeView.bind(this)
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.header.changeView > 0){
+            this.changeView(nextProps.header.changeView)
+        }
     }
 
     changeView(key){
@@ -47,4 +54,13 @@ class Survey extends React.Component {
     }
 }
 
-export default Survey
+const mapStateToProps = (state) => ({
+    header: state.header
+})
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+
+}, dispatch)
+
+export default connect(mapStateToProps, mapDispatchToProps)(Survey)
+

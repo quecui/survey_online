@@ -7,7 +7,7 @@ function register(req, res) {
 	  password: req.body.password,
 	})
 	user.save(function(err) {
-	  if (err) return res.status('505').json({ message: "Email or username is existed"});
+	  if (err) return res.status('505').json({ message: "Email or username exist"});
 	  return res.status('200').json(
 		{ 
 		  message: 'Success!',
@@ -19,9 +19,9 @@ function register(req, res) {
 function signin (req, res) {
   User.findOne({username: req.body.username}, (err, user)=>{
     if (err || !user){
-      return res.status('404').json({ message: "Username is not exit"});
+      return res.status('404').json({ message: "Username does not exit"});
     } else{
-      if (user.password != req.body.password){
+      if (user.password !== req.body.password){
         return res.status('404').json({ message: "Password is wrong"});
       }
       return res.status('200').json({ message: 'Success!', dataReq: {token: user._id, username: user.username} });

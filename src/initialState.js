@@ -1,21 +1,16 @@
 export default {
     header: {
-        username: ''
+        username: '',
+        login: false,
+        changeView: 0
     },
 
     survey: {
         name: 'Khao sat 2018',
         pages: [
-            {
-                data: []
-            }
+
         ],
     },
 
-    surveyList: [
-        {
-            _id: '123213213',
-            name: 'Khao sat 2018'
-        }
-    ]
+    surveyList: []
 }

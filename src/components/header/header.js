@@ -5,6 +5,8 @@ import { bindActionCreators } from 'redux'
 import {Navbar, Nav, NavItem} from 'react-bootstrap'
 import {Redirect} from 'react-router-dom'
 import * as formAction from '../form/formAction'
+import * as headerAction from './headerAction'
+import * as surveyAction from '../survey/surveyAction'
 import SignIn from '../form/signin'
 import SignUp from '../form/signup'
 import '../../assets/css/survey.css'
@@ -12,6 +14,8 @@ import '../../assets/css/survey.css'
 class Header extends Component {
     static propTypes = {
         signIn: PropTypes.func.isRequired,
+        getSurveyListByUser: PropTypes.func.isRequired,
+        register: PropTypes.func.isRequired,
         showSignInForm: PropTypes.func.isRequired,
         header: PropTypes.object.isRequired,
         getUsernameByToken: PropTypes.func.isRequired,
@@ -36,18 +40,28 @@ class Header extends Component {
             isRedirect: false
         }
     }
+
     componentWillMount() {
-        const token = localStorage.getItem('userToken')
-
-        if(token !== null && token !== undefined){
-            this.props.getUsernameByToken(token)
-        }
-
         if(localStorage.getItem('signinForm') !== null){
             this.setState({showSignInForm: true})
             localStorage.removeItem('signinForm')
         }
 
+        if(localStorage.getItem('token') !== null) {
+            this.props.getUsernameByToken({token: localStorage.getItem('token')})
+            this.props.getSurveyListByUser({token: localStorage.getItem('token')})
+        }
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.header.login === true){
+            this.setState({showSignUpForm: false})
+            this.setState({showSignInForm: nextProps.header.login})
+        }
+
+        if(nextProps.header.username === '') {
+            this.setState({isRedirect: true})
+        }
     }
 
     setShowSignInForm(flag){
@@ -60,7 +74,7 @@ class Header extends Component {
 
     submitSignIn(username, password) {
         this.setShowSignInForm(false)
-        this.props.signIn({name: username, pass: password})
+        this.props.signIn({username: username, password: password})
     }
 
     switchForm(key){
@@ -74,9 +88,13 @@ class Header extends Component {
     }
 
     submitSignUp(username, email, password){
-        alert(username)
-        alert(email)
-        alert(password)
+        const data = {
+            username: username,
+            email: email,
+            password: password
+        }
+
+        this.props.register(data)
     }
 
     signout(){
@@ -149,7 +167,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => bindActionCreators({
     signIn: formAction.signIn,
     showUsernameInHeader: formAction.showUsernameInHeader,
-    getUsernameByToken: formAction.getUsernameByToken
+    getUsernameByToken: formAction.getUsernameByToken,
+    register: headerAction.register,
+    getSurveyListByUser: surveyAction.getSurveyListByUser
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header)

@@ -1,16 +1,20 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import {Button, Modal} from 'react-bootstrap'
+import {Button, Modal, ControlLabel, InputGroup, FormControl} from 'react-bootstrap'
 import PropTypes from "prop-types"
 import * as surveyAction from './surveyAction'
 
 class SurveyList extends React.Component {
     static propTypes = {
         changeView: PropTypes.func.isRequired,
-        deleteSurvey: PropTypes.func.isRequired,
+        publishSurvey: PropTypes.func.isRequired,
+        getSurveyUrl: PropTypes.func.isRequired,
+        getDetailSurvey: PropTypes.func.isRequired,
+        deleteSurveyFromServer: PropTypes.func.isRequired,
         surveyList: PropTypes.array.isRequired,
-        createNewSurvey: PropTypes.func.isRequired
+        createNewSurvey: PropTypes.func.isRequired,
+        header: PropTypes.object.isRequired
     }
 
     constructor(props, context) {
@@ -22,32 +26,39 @@ class SurveyList extends React.Component {
         this.deleteSurvey = this.deleteSurvey.bind(this)
         this.setShowPublishConfirm = this.setShowPublishConfirm.bind(this)
         this.publishSurvey = this.publishSurvey.bind(this)
+        this.getDetailSurvey = this.getDetailSurvey.bind(this)
+        this.getUrl = this.getUrl.bind(this)
 
         this.state = {
             showDeleteConfirm: false,
             surveyIndex: 0,
-            showPublishConfirm: false
+            showPublishConfirm: false,
+            disableEdit: false,
+            showUrl: false
         }
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.header.showUrl !== undefined && nextProps.header.showUrl === true) {
+            this.setState({showUrl: true})
+        }
+    }
+
+    getUrl(index){
+        const data = {
+            token: localStorage.getItem('token'),
+            survey_id: this.props.surveyList[index]._id
+        }
+
+        this.props.getSurveyUrl(data)
     }
 
     addNewSurvey(){
         const data = {
             name: 'Khao sat ' + new Date().getMilliseconds(),
-            pages: [
-                {
-                    data: [
-                        {
-                            type: 7,
-                            name: 'Commnent',
-                            component: {
-                                question: 'Which color do you like ?',
-                                answer: ''
-                            },
-                            required: 'none'
-                        }
-                    ]
-                }
-            ]
+            token: localStorage.getItem('token'),
+            target: 10,
+            time: new Date().setDate(new Date().getDate() + 7)
         }
 
         this.props.createNewSurvey(data)
@@ -59,7 +70,11 @@ class SurveyList extends React.Component {
     }
 
     deleteSurvey(){
-        this.props.deleteSurvey(this.state.surveyIndex)
+        const data = {
+            token: localStorage.getItem('token'),
+            survey_id: this.props.surveyList[this.state.surveyIndex]._id
+        }
+        this.props.deleteSurveyFromServer(data, this.state.surveyIndex)
         this.setState({showDeleteConfirm: false})
     }
 
@@ -69,7 +84,21 @@ class SurveyList extends React.Component {
     }
 
     publishSurvey(){
+        const data = {
+            token: localStorage.getItem('token'),
+            survey_id: this.props.surveyList[this.state.surveyIndex]._id
+        }
+
         this.setState({showPublishConfirm: false})
+        this.props.publishSurvey(data, this.state.surveyIndex)
+    }
+
+    getDetailSurvey(index){
+        const data = {
+            token: localStorage.getItem('token'),
+            survey_id: this.props.surveyList[index]._id
+        }
+        this.props.getDetailSurvey(data)
     }
 
     render() {
@@ -87,9 +116,9 @@ class SurveyList extends React.Component {
                                         <b>{survey.name}</b>
                                     </td>
                                     <td>
-                                        <Button className={'btn-survey'} bsStyle="info"><b>Get URL</b></Button>
-                                        <Button onClick={e => this.props.changeView(1)} className={'btn-survey'} bsStyle="info"><b>Edit</b></Button>
-                                        <Button onClick={e => this.setShowPublishConfirm(index, true)} className={'btn-survey'} bsStyle="info"><b>Pulish</b></Button>
+                                        <Button onClick={e => this.getUrl(index)} disabled={!survey.active === true} className={'btn-survey'} bsStyle="info"><b>Get URL</b></Button>
+                                        <Button disabled={survey.active === true}onClick={e => this.getDetailSurvey(index)} className={'btn-survey'} bsStyle="info"><b>Edit</b></Button>
+                                        <Button disabled={survey.active === true} onClick={e => this.setShowPublishConfirm(index, true)} className={'btn-survey'} bsStyle="info"><b>Pulish</b></Button>
                                         <Button className={'btn-survey'} bsStyle="info"><b>Result</b></Button>
                                         <Button onClick={e => this.setShowConfirm(index, true)} className={'btn-survey'} bsStyle="danger"><b>Delete</b></Button>
                                     </td>
@@ -130,18 +159,41 @@ class SurveyList extends React.Component {
                         </Modal.Footer>
                     </Modal.Dialog>
                 }
+
+                {this.state.showUrl === false ? '':
+                    <Modal.Dialog>
+                        <Modal.Body>
+                            <ControlLabel><b>Survey URL</b></ControlLabel>
+                            <InputGroup>
+                                <InputGroup.Addon><span className="glyphicon glyphicon-pencil" /></InputGroup.Addon>
+                                <FormControl
+                                    type="text"
+                                    value={this.props.header.link}
+                                />
+                            </InputGroup>
+                        </Modal.Body>
+
+                        <Modal.Footer>
+                            <Button onClick={e => this.setState({showUrl: false})} bsStyle="primary">Close</Button>
+                        </Modal.Footer>
+                    </Modal.Dialog>
+                }
             </span>
         )
     }
 }
 
 const mapStateToProps = (state) => ({
-    surveyList: state.surveyList
+    surveyList: state.surveyList,
+    header: state.header
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    createNewSurvey: surveyAction.addNewSurvey,
-    deleteSurvey: surveyAction.deleteSurvey
+    createNewSurvey: surveyAction.createNewSurvey,
+    deleteSurveyFromServer: surveyAction.deleteSurveyFromServer,
+    publishSurvey: surveyAction.publishSurvey,
+    getDetailSurvey: surveyAction.getDetailSurvey,
+    getSurveyUrl: surveyAction.getSurveyUrl
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(SurveyList)

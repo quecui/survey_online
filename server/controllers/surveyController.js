@@ -2,8 +2,6 @@ const Survey = require('../models/survey');
 const User = require('../models/user');
 const Page = require('../models/page');
 const Result = require('../models/result');
-const nodemailer = require('nodemailer'); 
-const async = require('async');
 
 function createSurvey(req, res) {
   let token = req.body.token;
@@ -25,7 +23,8 @@ function createSurvey(req, res) {
         if (err) {
           return res.status('500').json({message: 'Error with server!'});
         }
-        return res.status('200').json({message: 'Success!'});
+        console.log(survey)
+        return res.status('200').json({message: 'Success!', dataReq: survey});
       }
     )
   })
@@ -229,67 +228,6 @@ function statisticalSurvey (req, res) {
   )
 }
 
-function notifySurvey (){
-  let CronJob = require('cron').CronJob;
-  let job = new CronJob('1 * * * * *', async function() {
-      try {
-        let allUser = await User.find();
-        allUser.forEach(async user => {
-          let listSurvey = [];
-          user.surveys.forEach(async surveyId => {
-            let survey = await Survey.find({
-              _id: surveyId,
-              active: true
-            });
-            if (survey){
-              if (Date.now() > survey.time){
-                listSurvey.push({_id: survey._id, name: survey.name});
-              }
-              else{
-                let resultNumber = await Result.count({survey_id: survey._id});
-                if (resultNumber > survey.target){
-                  listSurvey.push({_id: survey._id, name: survey.name});
-                }
-              }
-            }
-          })
-
-          let transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-              user: 'projectsurvey123456789@gmail.com',
-              pass: '123456789@a'
-            }
-          });
-          console.log(listSurvey)
-          let mailOptions = {
-            from: 'projectsurvey123456789@gmail.com',
-            to: user.email,
-            subject: 'Some survey of you are complete!',
-            text: listSurvey.toString
-          };
-          
-          transporter.sendMail(mailOptions, function(error, info){
-            if (error) {
-              console.log(error);
-            } else {
-              console.log('Message sent: %s', info.messageId);
-              // Preview only available when sending through an Ethereal account
-              console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-            }
-          });
-        })
-      } catch (error) {
-        console.log(error);
-      } 
-    }, function () {
-      console.log("DONE!");/* This function is executed when the job stops */
-    },
-    true, /* Start the job right now */
-    'Asia/Ho_Chi_Minh' /* Time zone of this job. */
-  );
-}
-
 function checkToken(token, res){
   if (token === undefined) {
     return res.status('401').json({ message: 'Session Timeout. Please login!'});
@@ -304,6 +242,5 @@ module.exports = {
   publishSurvey: publishSurvey,
   getAllSurvey: getAllSurvey,
   statisticalSurvey: statisticalSurvey,
-  notifySurvey: notifySurvey,
   detailSurvey: detailSurvey
 }

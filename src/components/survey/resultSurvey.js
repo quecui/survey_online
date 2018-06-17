@@ -4,12 +4,9 @@ import { bindActionCreators } from 'redux'
 import {Button, ControlLabel, InputGroup, FormControl} from 'react-bootstrap'
 import PropTypes from "prop-types"
 
-class Color extends React.Component {
+class ResultSurvey extends React.Component {
     static propTypes = {
-        trailer: PropTypes.string,
-        data: PropTypes.object,
-        index: PropTypes.number,
-        handleChangeData: PropTypes.func
+        //trailer: PropTypes.string
     }
 
     constructor(props, context) {
@@ -32,9 +29,9 @@ class Color extends React.Component {
             <div className={'do-singletext'}>
                 <ControlLabel>{this.props.index + 1}. {this.props.data.component.question}</ControlLabel>
                 <InputGroup>
-                    <InputGroup.Addon><span className="glyphicon glyphicon-adjust" /></InputGroup.Addon>
+                    <InputGroup.Addon><span className="glyphicon glyphicon-pencil" /></InputGroup.Addon>
                     <FormControl
-                        type="color"
+                        type="text"
                         value={this.props.data.component.answer}
                         onChange={e => this.handleChange(e.target.value)}
                         placeholder="Input your answer here"/>
@@ -48,4 +45,4 @@ const mapStateToProps = (state) => ({})
 
 const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch)
 
-export default connect(mapStateToProps, mapDispatchToProps)(Color)
+export default connect(mapStateToProps, mapDispatchToProps)(ResultSurvey)

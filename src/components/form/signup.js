@@ -135,7 +135,7 @@ class SignUp extends React.Component {
                         </FormGroup>
 
                         <FormGroup controlId="formValidationSuccess2" validationState=''>
-                            <ControlLabel className={'signin-form'}>Repeat Password</ControlLabel>
+                            <ControlLabel className={'signin-form repeat-password'}>Repeat Password</ControlLabel>
                             <InputGroup>
                                 <InputGroup.Addon><span className="glyphicon glyphicon-pencil" /></InputGroup.Addon>
                                 <FormControl

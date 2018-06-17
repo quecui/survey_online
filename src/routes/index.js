@@ -5,11 +5,12 @@ import HomePage from '../components/homepage/homepage'
 import About from '../components/about/about'
 import Contact from '../components/contact/contact'
 import Survey from '../components/survey/survey'
+import DoSurvey from '../components/survey/doSurvey'
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route
         {...rest}
-        render={props => (localStorage.getItem('userToken') !== undefined && localStorage.getItem('userToken') !== null ? <Component {...props} /> : <Redirect to="/" />)}
+        render={props => (localStorage.getItem('userToken') !== undefined && localStorage.getItem('token') !== null ? <Component {...props} /> : <Redirect to="/" />)}
     />
 )
 
@@ -23,6 +24,7 @@ function Routes() {
               <Route exact path="/about" component={About} />
               <Route exact path="/contact" component={Contact} />
               <PrivateRoute exact path="/survey" component={Survey} />
+              <Route path="/:id" component={DoSurvey} />
           </Switch>
       </div>
     </Router>

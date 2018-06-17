@@ -9,10 +9,13 @@ import SingleInput from './surveyComponent/singleinput'
 import Checkbox from './surveyComponent/checkbox'
 import Matrix from './surveyComponent/matrix'
 import RunSurvey from './runSurvey'
+import * as surveyAction from './surveyAction'
+
 
 class DesignSurvey extends React.Component {
     static propTypes = {
-        survey: PropTypes.object.isRequired
+        survey: PropTypes.object.isRequired,
+        saveSurvey: PropTypes.func.isRequired
     }
 
     constructor(props, context) {
@@ -21,10 +24,10 @@ class DesignSurvey extends React.Component {
 
         this.state = {
             showSettingModal: false,
-            unitTarget: 0,
-            timeTarget: '',
+            unitTarget: this.props.survey.target,
+            timeTarget: surveyUtils.setTimeTarget(this.props.survey.time),
 
-            pages: this.props.survey.pages,
+            pages: surveyUtils.convertPageFromString(this.props.survey.pages),
             survey: this.props.survey,
             pageIndex: 0,
 
@@ -41,6 +44,13 @@ class DesignSurvey extends React.Component {
         this.handleChangeData = this.handleChangeData.bind(this)
         this.showTrailer = this.showTrailer.bind(this)
         this.changeSurveyName = this.changeSurveyName.bind(this)
+        this.saveSurvey = this.saveSurvey.bind(this)
+        this.validateSurvey = this.validateSurvey.bind(this)
+        this.setTimeTarget = this.setTimeTarget.bind(this)
+    }
+
+    setTimeTarget(){
+
     }
 
     setShowSetting(value){
@@ -50,7 +60,6 @@ class DesignSurvey extends React.Component {
     saveSetting(unit, time){
         this.setState({unitTarget: unit})
         this.setState({timeTarget: time})
-        alert(time)
     }
 
     addPage(){
@@ -74,6 +83,16 @@ class DesignSurvey extends React.Component {
     }
 
     addComponent(key){
+        if(this.state.pages.length === 0) {
+            const data = {
+                data: []
+            }
+            const tmp = this.state.pages
+            tmp.push(data)
+
+            this.setState({pages: tmp})
+        }
+
         const tmpPages = surveyUtils.addComponent(key, this.state.pages, this.state.pageIndex)
         this.setState({pages: tmpPages})
     }
@@ -106,6 +125,7 @@ class DesignSurvey extends React.Component {
         this.setState({pages: tmpPages})
     }
 
+    // Todo
     handleChangeData(componentIndex, data){
         const tmpPages = this.state.pages
         tmpPages[this.state.pageIndex].data[componentIndex] = data
@@ -123,6 +143,36 @@ class DesignSurvey extends React.Component {
         this.setState({survey: tmp})
     }
 
+    validateSurvey(){
+        if(this.state.survey.name === '') {
+            alert('Survey name is required')
+            return false
+        }
+
+        if(this.state.pages[0].data === undefined || this.state.pages[0].data.length === 0){
+            alert('Survey Component is required')
+            return false
+        }
+
+        return true
+    }
+
+    saveSurvey(){
+        if(this.validateSurvey() === true){
+            const data = {
+                token: localStorage.getItem('token'),
+                survey_id: this.state.survey._id,
+                name: this.state.survey.name,
+                time: this.state.timeTarget,
+                target: this.state.unitTarget,
+                pages: surveyUtils.convertPageToString(this.state.pages)
+            }
+
+            this.props.saveSurvey(data)
+        }
+    }
+
+
     render() {
         return(
             <span>
@@ -135,7 +185,7 @@ class DesignSurvey extends React.Component {
                             placeholder="Input survey name here"/>
                     </InputGroup>
                     {this.state.trailer === false ?
-                        <Button className={'btn-save-survey'}>Save</Button>:
+                        <Button onClick={e => this.saveSurvey()} className={'btn-save-survey'}>Save</Button>:
                         <Button onClick={e => this.showTrailer(false)} className={'btn-save-survey'}>Back</Button>
                     }
 
@@ -149,7 +199,7 @@ class DesignSurvey extends React.Component {
                             <span className={'btn-add-page'}><Button onClick={e => this.addPage()}><span className="glyphicon glyphicon-plus"/> Add Page</Button></span>
                             <Button onClick={e => this.showTrailer(true)}><span className="glyphicon glyphicon-expand"/> Trailer</Button>
                             <span className={'edit-setting'}><Button onClick={e => this.setShowSetting(true)}><span className="glyphicon glyphicon-cog"/> Setting</Button></span>
-                            {this.state.showSettingModal === true ? <SurveySettingModal save={this.saveSetting} show={this.setShowSetting}/>: ''}
+                            {this.state.showSettingModal === true ? <SurveySettingModal time={this.state.timeTarget} target={this.state.unitTarget} save={this.saveSetting} show={this.setShowSetting}/>: ''}
 
                             <div className={'edit-design'}>
                                 <div className={'edit-toolbox'}>
@@ -206,6 +256,7 @@ class DesignSurvey extends React.Component {
                                                                     {component.type === 1 || component.type === 2 || component.type === 3 || component.type === 7 || component.type === 4 || component.type === 9 ?
                                                                         <SingleInput
                                                                             question={component.component.question}
+                                                                            isRequired={component.required}
                                                                             data={component}
                                                                             handleValue={this.handleChangeData}
                                                                             move={this.moveComponent}
@@ -251,6 +302,8 @@ const mapStateToProps = (state) => ({
     survey: state.survey
 })
 
-const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch)
+const mapDispatchToProps = dispatch => bindActionCreators({
+    saveSurvey: surveyAction.saveSurvey
+}, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(DesignSurvey)

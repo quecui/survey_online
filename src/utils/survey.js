@@ -6,7 +6,7 @@ export function addNumber(componentArr, pageIndex) {
             question: 'Which number do you like ?',
             answer: ''
         },
-        required: 'none'
+        required: false
     }
 
     componentArr[pageIndex].data.push(data)
@@ -24,7 +24,7 @@ export function addMatrix(componentArr, pageIndex) {
             numberChange: 0,
             answer: ''
         },
-        required: 'none'
+        required: false
     }
 
     componentArr[pageIndex].data.push(data)
@@ -39,7 +39,7 @@ export function addComment(componentArr, pageIndex) {
             question: 'Which color do you like ?',
             answer: ''
         },
-        required: 'none'
+        required: false
     }
 
     componentArr[pageIndex].data.push(data)
@@ -56,7 +56,7 @@ export function addDropbox(componentArr, pageIndex) {
             numberChange: 0,
             answer: ''
         },
-        required: 'none'
+        required: false
     }
 
     componentArr[pageIndex].data.push(data)
@@ -73,7 +73,7 @@ export function addCheckbox(componentArr, pageIndex) {
             numberChange: 0,
             answer: ''
         },
-        required: 'none'
+        required: false
     }
 
     componentArr[pageIndex].data.push(data)
@@ -88,7 +88,7 @@ export function addEmail(componentArr, pageIndex) {
             question: 'What is your email ?',
             answer: ''
         },
-        required: 'string'
+        required: false
     }
 
     componentArr[pageIndex].data.push(data)
@@ -103,7 +103,7 @@ export function addColor(componentArr, pageIndex) {
             question: 'Which color do you like ?',
             answer: ''
         },
-        required: 'string'
+        required: false
     }
 
     componentArr[pageIndex].data.push(data)
@@ -118,7 +118,7 @@ export function addSingleText(componentArr, pageIndex) {
             question: 'What is your name?',
             answer: ''
         },
-        required: 'string'
+        required: false
     }
 
     componentArr[pageIndex].data.push(data)
@@ -133,7 +133,7 @@ export function addBirthdate(componentArr, pageIndex) {
             question: 'When was you born ?',
             answer: ''
         },
-        required: 'string'
+        required: false
     }
 
     componentArr[pageIndex].data.push(data)
@@ -167,3 +167,33 @@ export function addComponent(key, componentArr, pageIndex){
     return componentArr
 }
 
+export function setTimeTarget(rootTime) {
+    const convertTime = new Date(Date.parse(rootTime))
+    let month = 0
+
+    if(convertTime.getMonth() + 1 > 9){
+        month = convertTime.getMonth() + 1
+    } else {
+        month = '0' + (convertTime.getMonth() + 1)
+    }
+
+    return convertTime.getFullYear() + '-' + month + '-' + convertTime.getDate()
+}
+
+export function convertPageToString(pages) {
+    const tmp = []
+    pages.map(page => {
+        tmp.push({data: JSON.stringify(page.data)})
+    })
+
+    return tmp
+}
+
+export function convertPageFromString(pages) {
+    const tmp = []
+    pages.map(page => {
+        tmp.push({data: JSON.parse(page.data)})
+    })
+
+    return tmp
+}

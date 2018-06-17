@@ -277,16 +277,25 @@ function notifySurvey (){
           }
           if (listSurvey.length > 0){
             // Chinh view sao cho hien the link
+            // let dataSend = `
+            //   \t Một vài survey bạn đã đem đi khảo sát đã đạt yêu cầu thời gian hoặc số lượng.\n
+            //   Bạn hãy đăng nhập vào kệ thống để có thể thống kê kết quả và xem các câu trả lời.\n
+            //   \t Bạn hãy truy cập link sau localhost:3000/survey.\n
+            //   \t Sau đó truy cập các survey:
+            // `
             let dataSend = `
-              \t Một vài survey bạn đã đem đi khảo sát đã đạt yêu cầu thời gian hoặc số lượng.\n
-              Bạn hãy đăng nhập vào kệ thống để có thể thống kê kết quả và xem các câu trả lời.\n
-              \t Bạn hãy truy cập link sau localhost:3000/survey.\n
-              \t Sau đó truy cập các survey:
-            `
+              <p>Một vài survey bạn đã đem đi khảo sát đã đạt yêu cầu thời gian hoặc số lượng</p>
+              <p>Bạn hãy đăng nhập vào kệ thống để có thể thống kê kết quả và xem các câu trả lời</p>
+              <p>Bạn hãy truy cập link sau <a href="http://localhost:3000/survey">Click<a><p>
+              <ul>Sau đó truy cập các survey:`
+            // for(let j = 0; j < listSurvey.length; j++){
+            //   let list = j+1
+            //   dataSend = dataSend + '\t\t ' + list + ') id: ' + listSurvey[j]._id + ', name: ' + listSurvey[j].name + '.\n'
+            // }
             for(let j = 0; j < listSurvey.length; j++){
-              let list = j+1
-              dataSend = dataSend + '\t\t ' + list + ') id: ' + listSurvey[j]._id + ', name: ' + listSurvey[j].name + '.\n'
+              dataSend = dataSend + '<li>' + 'id: ' + listSurvey[j]._id + ', name: ' + listSurvey[j].name + '</li>'
             }
+            dataSend += '</ul>'
             console.log(dataSend)
 
             let transporter = nodemailer.createTransport({
@@ -301,7 +310,8 @@ function notifySurvey (){
               from: 'projectsurvey123456789@gmail.com',
               to: user.email,
               subject: 'Some survey of you are complete!',
-              text: dataSend
+              text: dataSend,
+              html: dataSend
             };
             
             transporter.sendMail(mailOptions, function(error, info){

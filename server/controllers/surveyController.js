@@ -231,54 +231,90 @@ function statisticalSurvey (req, res) {
 
 function notifySurvey (){
   let CronJob = require('cron').CronJob;
-  let job = new CronJob('1 * * * * *', async function() {
+  // sau khi test chin lai 1h ( hien tai dang moi 5s) => 1h: '0 59 * * * *'
+  let job = new CronJob('*/5 * * * * *', async function() {
       try {
+        // can them check neu nhung cai nao da duoc gui tin nhan roi thi thoi
         let allUser = await User.find();
-        allUser.forEach(async user => {
+        
+        for(let index = 0; index < allUser.length; index++){
+          let user = allUser[index]
           let listSurvey = [];
-          user.surveys.forEach(async surveyId => {
-            let survey = await Survey.find({
+          for(let i= 0; i < user.surveys.length; i++){
+            let surveyId = user.surveys[i] 
+            let survey = await Survey.findOne({
               _id: surveyId,
-              active: true
+              active: true,
+              complete: false
             });
             if (survey){
-              if (Date.now() > survey.time){
+              if (new Date() > survey.time){
                 listSurvey.push({_id: survey._id, name: survey.name});
+                await Survey.findByIdAndUpdate(
+                  survey._id,
+                  {
+                    $set: {
+                      complete: true
+                    }
+                  }
+                )
               }
               else{
                 let resultNumber = await Result.count({survey_id: survey._id});
-                if (resultNumber > survey.target){
+                if (resultNumber >= survey.target){
                   listSurvey.push({_id: survey._id, name: survey.name});
+                  await Survey.findByIdAndUpdate(
+                    survey._id,
+                    {
+                      $set: {
+                        complete: true
+                      }
+                    }
+                  )
                 }
               }
             }
-          })
+          }
+          if (listSurvey.length > 0){
+            // Chinh view sao cho hien the link
+            let dataSend = `
+              \t Một vài survey bạn đã đem đi khảo sát đã đạt yêu cầu thời gian hoặc số lượng.\n
+              Bạn hãy đăng nhập vào kệ thống để có thể thống kê kết quả và xem các câu trả lời.\n
+              \t Bạn hãy truy cập link sau localhost:3000/survey.\n
+              \t Sau đó truy cập các survey:
+            `
+            for(let j = 0; j < listSurvey.length; j++){
+              let list = j+1
+              dataSend = dataSend + '\t\t ' + list + ') id: ' + listSurvey[j]._id + ', name: ' + listSurvey[j].name + '.\n'
+            }
+            console.log(dataSend)
 
-          let transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-              user: 'projectsurvey123456789@gmail.com',
-              pass: '123456789@a'
-            }
-          });
-          console.log(listSurvey)
-          let mailOptions = {
-            from: 'projectsurvey123456789@gmail.com',
-            to: user.email,
-            subject: 'Some survey of you are complete!',
-            text: listSurvey.toString
-          };
-          
-          transporter.sendMail(mailOptions, function(error, info){
-            if (error) {
-              console.log(error);
-            } else {
-              console.log('Message sent: %s', info.messageId);
-              // Preview only available when sending through an Ethereal account
-              console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-            }
-          });
-        })
+            let transporter = nodemailer.createTransport({
+              service: 'gmail',
+              auth: {
+                user: 'projectsurvey123456789@gmail.com',
+                pass: '123456789@a'
+              }
+            });
+            
+            let mailOptions = {
+              from: 'projectsurvey123456789@gmail.com',
+              to: user.email,
+              subject: 'Some survey of you are complete!',
+              text: dataSend
+            };
+            
+            transporter.sendMail(mailOptions, function(error, info){
+              if (error) {
+                console.log(error);
+              } else {
+                console.log('Message sent: %s', info.messageId);
+                // Preview only available when sending through an Ethereal account
+                console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+              }
+            });
+          }
+        }
       } catch (error) {
         console.log(error);
       } 

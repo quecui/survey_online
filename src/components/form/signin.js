@@ -40,6 +40,7 @@ class SignIn extends React.Component {
         else {
             this.setState({message: ''})
             this.props.submit(this.state.username, this.state.password)
+            this.props.show(false)
         }
     }
 

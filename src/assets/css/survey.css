@@ -586,3 +586,7 @@ tr:nth-child(even) {
 .question-in-chart{
   margin-top: 30px;
 }
+
+.icon-required{
+  color: red;
+}

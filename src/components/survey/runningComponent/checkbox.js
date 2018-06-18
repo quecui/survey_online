@@ -53,7 +53,7 @@ class CheckboxCom extends React.Component {
     render() {
         return (
             <div className={'do-singletext'}>
-                <ControlLabel>{this.props.index + 1}. {this.props.data.component.question}</ControlLabel>
+                <ControlLabel>{this.props.index + 1}. {this.props.data.component.question} {this.props.data.required === true ? <span className={'icon-required'}>*</span>: ''}</ControlLabel>
                 <FormGroup className={'checkbox-survey'}>
                     {this.props.data.component.options.map((option, index) => (
                         <div className={'checkbox-survey'}>

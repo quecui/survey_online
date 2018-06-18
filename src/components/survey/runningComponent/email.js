@@ -20,7 +20,7 @@ class Email extends React.Component {
     }
 
     handleChange(answer){
-        if(this.props.trailer !== 'true'){
+        if(this.props.trailer !== 'true' ){
             const tmp = this.props.data
             tmp.component.answer = answer
             this.props.handleChangeData(this.props.index, tmp)
@@ -30,7 +30,7 @@ class Email extends React.Component {
     render() {
         return (
             <div className={'do-singletext'}>
-                <ControlLabel>{this.props.index + 1}. {this.props.data.component.question}</ControlLabel>
+                <ControlLabel>{this.props.index + 1}. {this.props.data.component.question} {this.props.data.required === true ? <span className={'icon-required'}>*</span>: ''}</ControlLabel>
                 <InputGroup>
                     <InputGroup.Addon><span className="glyphicon glyphicon-pencil" /></InputGroup.Addon>
                     <FormControl

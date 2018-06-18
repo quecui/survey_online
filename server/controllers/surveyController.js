@@ -2,11 +2,13 @@ const Survey = require('../models/survey');
 const User = require('../models/user');
 const Page = require('../models/page');
 const Result = require('../models/result');
+const nodemailer = require('nodemailer');
+const async = require('async');
 
 function createSurvey(req, res) {
   let token = req.body.token;
   // Chu y time! lech 7h
-  let survey = new Survey({ 
+  let survey = new Survey({
     name: req.body.name,
     time: req.body.time,
     target: req.body.target
@@ -228,6 +230,113 @@ function statisticalSurvey (req, res) {
   )
 }
 
+function notifySurvey (){
+  let CronJob = require('cron').CronJob;
+  // sau khi test chin lai 1h ( hien tai dang moi 5s) => 1h: '0 59 * * * *'
+  let job = new CronJob('*/5 * * * * *', async function() {
+      try {
+        // can them check neu nhung cai nao da duoc gui tin nhan roi thi thoi
+        let allUser = await User.find();
+
+        for(let index = 0; index < allUser.length; index++){
+          let user = allUser[index]
+          let listSurvey = [];
+          for(let i= 0; i < user.surveys.length; i++){
+            let surveyId = user.surveys[i]
+            let survey = await Survey.findOne({
+              _id: surveyId,
+              active: true,
+              complete: false
+            });
+            if (survey){
+              if (new Date() > survey.time){
+                listSurvey.push({_id: survey._id, name: survey.name});
+                await Survey.findByIdAndUpdate(
+                  survey._id,
+                  {
+                    $set: {
+                      complete: true
+                    }
+                  }
+                )
+              }
+              else{
+                let resultNumber = await Result.count({survey_id: survey._id});
+                if (resultNumber >= survey.target){
+                  listSurvey.push({_id: survey._id, name: survey.name});
+                  await Survey.findByIdAndUpdate(
+                    survey._id,
+                    {
+                      $set: {
+                        complete: true
+                      }
+                    }
+                  )
+                }
+              }
+            }
+          }
+          if (listSurvey.length > 0){
+            // Chinh view sao cho hien the link
+            // let dataSend = `
+            //   \t Một vài survey bạn đã đem đi khảo sát đã đạt yêu cầu thời gian hoặc số lượng.\n
+            //   Bạn hãy đăng nhập vào kệ thống để có thể thống kê kết quả và xem các câu trả lời.\n
+            //   \t Bạn hãy truy cập link sau localhost:3000/survey.\n
+            //   \t Sau đó truy cập các survey:
+            // `
+            let dataSend = `
+              <p>Một vài survey bạn đã đem đi khảo sát đã đạt yêu cầu thời gian hoặc số lượng</p>
+              <p>Bạn hãy đăng nhập vào kệ thống để có thể thống kê kết quả và xem các câu trả lời</p>
+              <p>Bạn hãy truy cập link sau <a href="http://localhost:3000/survey">Click<a><p>
+              <ul>Sau đó truy cập các survey:`
+            // for(let j = 0; j < listSurvey.length; j++){
+            //   let list = j+1
+            //   dataSend = dataSend + '\t\t ' + list + ') id: ' + listSurvey[j]._id + ', name: ' + listSurvey[j].name + '.\n'
+            // }
+            for(let j = 0; j < listSurvey.length; j++){
+              dataSend = dataSend + '<li>' + 'id: ' + listSurvey[j]._id + ', name: ' + listSurvey[j].name + '</li>'
+            }
+            dataSend += '</ul>'
+            console.log(dataSend)
+
+            let transporter = nodemailer.createTransport({
+              service: 'gmail',
+              auth: {
+                user: 'projectsurvey123456789@gmail.com',
+                pass: '123456789@a'
+              }
+            });
+
+            let mailOptions = {
+              from: 'projectsurvey123456789@gmail.com',
+              to: user.email,
+              subject: 'Some survey of you are complete!',
+              text: dataSend,
+              html: dataSend
+            };
+
+            transporter.sendMail(mailOptions, function(error, info){
+              if (error) {
+                console.log(error);
+              } else {
+                console.log('Message sent: %s', info.messageId);
+                // Preview only available when sending through an Ethereal account
+                console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+              }
+            });
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }, function () {
+      console.log("DONE!");/* This function is executed when the job stops */
+    },
+    true, /* Start the job right now */
+    'Asia/Ho_Chi_Minh' /* Time zone of this job. */
+  );
+}
+
 function checkToken(token, res){
   if (token === undefined) {
     return res.status('401').json({ message: 'Session Timeout. Please login!'});
@@ -242,5 +351,6 @@ module.exports = {
   publishSurvey: publishSurvey,
   getAllSurvey: getAllSurvey,
   statisticalSurvey: statisticalSurvey,
+  notifySurvey: notifySurvey,
   detailSurvey: detailSurvey
 }

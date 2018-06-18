@@ -38,7 +38,7 @@ class DropdownCom extends React.Component {
     render() {
         return (
             <div className={'do-singletext'}>
-                <ControlLabel>{this.props.index + 1}. {this.props.data.component.question}</ControlLabel>
+                <ControlLabel>{this.props.index + 1}. {this.props.data.component.question} {this.props.data.required === true ? <span className={'icon-required'}>*</span>: ''}</ControlLabel>
                 <FormGroup controlId="formControlsSelect">
                     <FormControl componentClass="select" onChange={e => this.handleChange(e.target.value)} placeholder="select" className={'dropbox-survey'}>
                         {this.props.data.component.options.map((option, index) => (

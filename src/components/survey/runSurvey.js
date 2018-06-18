@@ -51,10 +51,30 @@ class RunSurvey extends React.Component {
         if(this.props.trailer === 'false'){
             for(let i = 0; i < this.state.data[this.state.pageIndex].data.length; i++){
                 let component = this.state.data[this.state.pageIndex].data[i]
-                if(component.required === true && component.component.answer === ''){
-                    alert('Please complete this page')
+
+                if(component.required === true){
+                  if(component.component.answer === ''){
+                    alert('Please complete question ' + (i+1))
                     flag = true
                     break
+                  }
+
+
+                  if(component.type === 4 ){
+                    if(component.component.answer.indexOf('@') < 0){
+                      alert('Email wrong format')
+                      flag = true
+                      break
+                    }
+                  }
+
+                  if(component.type === 5){
+                    if(component.component.answer.length === 0){
+                      alert('Please complete question ' + (i+1))
+                      flag = true
+                      break
+                    }
+                  }
                 }
             }
         }
@@ -71,10 +91,29 @@ class RunSurvey extends React.Component {
         if(this.props.trailer === 'false'){
             for(let i = 0; i < this.state.data[pageLength - 1].data.length; i++){
                 let component = this.state.data[this.state.pageIndex].data[i]
-                if(component.required === true && component.component.answer === ''){
-                    alert('Please complete this page')
+                if(component.required === true){
+                  if(component.component.answer === ''){
+                    alert('Please complete question ' + (i+1))
                     flag = true
                     break
+                  }
+
+
+                  if(component.type === 4 ){
+                    if(component.component.answer.indexOf('@') < 0){
+                      alert('Email wrong format')
+                      flag = true
+                      break
+                    }
+                  }
+
+                  if(component.type === 5){
+                    if(component.component.answer.length === 0){
+                      alert('Please complete question ' + (i+1))
+                      flag = true
+                      break
+                    }
+                  }
                 }
             }
         }
@@ -84,7 +123,6 @@ class RunSurvey extends React.Component {
 
     submitAnswer(){
         if(this.checkLastPage() === false){
-            console.log(this.state.data)
             this.props.postAnswer({survey_id: this.props.surveyId, data: JSON.stringify(this.state.data)})
             this.setState({isShowWelcome: true})
 

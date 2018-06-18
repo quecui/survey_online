@@ -19,7 +19,15 @@ class DropdownCom extends React.Component {
         this.handleChange = this.handleChange.bind(this)
     }
 
-    handleChange(answer){
+  componentWillMount(){
+    if(this.props.trailer !== 'true'){
+      const tmp = this.props.data
+      tmp.component.answer = this.props.data.component.options[0]
+      this.props.handleChangeData(this.props.index, tmp)
+    }
+  }
+
+  handleChange(answer){
         if(this.props.trailer !== 'true'){
             const tmp = this.props.data
             tmp.component.answer = answer

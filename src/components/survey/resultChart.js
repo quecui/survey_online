@@ -264,7 +264,7 @@ class ResultChart extends React.Component {
                 <tr>
                   <td>
                     {this.state.data.map((component, index) => (
-                       <Button onClick={e => this.selectQuestion(index)} className={'btn-question-chart'}>Question {index + 1}</Button>
+                       <Button bsStyle="success" onClick={e => this.selectQuestion(index)} className={'btn-question-chart'}>Question {index + 1}</Button>
                     ))}
                   </td>
                   <td>

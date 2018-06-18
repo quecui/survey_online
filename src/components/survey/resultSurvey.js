@@ -104,16 +104,17 @@ class ResultSurvey extends React.Component {
       let flag = false
       let data = ''
 
-      results.map((result, index) => {
-        JSON.parse(result.data).map((pages, i) => {
-          pages.data.map((component, j) => {
+      results.map((result, index) => { // get all submit
+        let j = 0;
+        JSON.parse(result.data).map((pages, i) => { //get all page
+          pages.data.map((component) => { // get all component
 
             if(flag === false){
               if(component.type !== 8){
                 data = {
                   type: component.type,
                   question: component.component.question,
-                  answer: Array.isArray(component.component.answer) !== false ? component.component.answer : [component.component.answer],
+                  answer: Array.isArray(component.component.answer) !== false ? component.component.answer : (component.component.answer === '' ? []: [component.component.answer]),
                   number: []
                 }
                 anwserArr.push(data)
@@ -121,6 +122,7 @@ class ResultSurvey extends React.Component {
             } else {
                 Array.isArray(component.component.answer) === false ? anwserArr[j].answer.push(component.component.answer) : anwserArr[j].answer = [...anwserArr[j].answer, ...component.component.answer]
             }
+            j ++;
           })
 
         })
@@ -128,7 +130,7 @@ class ResultSurvey extends React.Component {
       })
 
       return anwserArr
-  }
+    }
 
     render() {
         return (

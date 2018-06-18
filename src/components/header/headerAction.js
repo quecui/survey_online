@@ -9,10 +9,9 @@ export function setShowSignInForm(flag) {
 export function register(data) {
     return function (dispatch) {
         surveyAjax.register(data).then(function(response) {
-            dispatch(setShowSignInForm(true))
-
             alert('SignUp Successfully')
         }, function(error) {
+            dispatch(setShowSignInForm(true))
             alert('Account exist. Please signup again')
         })
     }

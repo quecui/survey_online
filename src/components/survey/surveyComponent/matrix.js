@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import {ControlLabel, InputGroup, FormControl, Button, FormGroup} from 'react-bootstrap'
+import {ControlLabel, InputGroup, FormControl, Button} from 'react-bootstrap'
 import PropTypes from "prop-types";
 
 class Matrix extends React.Component {

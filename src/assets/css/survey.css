@@ -201,6 +201,7 @@ tr:nth-child(even) {
     margin-left: 65%;
     width: 83px;
     margin-bottom: 5px;
+    float: right;
 }
 
 .design-survey .icon{
@@ -266,7 +267,6 @@ tr:nth-child(even) {
 }
 
 .btn-add-page{
-    margin-left: 48%;
     margin-right: 5px;
 }
 
@@ -433,7 +433,7 @@ tr:nth-child(even) {
 }
 
 .do-survey-body{
-    /*width: 90%;*/
+    width: 92%;
     margin-left: 5%;
     margin-top: 30px;
     overflow: auto;
@@ -500,6 +500,7 @@ tr:nth-child(even) {
 }
 
 .submit-do-survey{
+    float: right;
     margin-left: 82%;
     width: 121px;
 }
@@ -537,8 +538,51 @@ tr:nth-child(even) {
 }
 
 .btn-show-chart{
+    width: 120px;
     margin-top: 20px;
     float: right;
     margin-bottom: 20px;
 }
 
+.setting-group-btn{
+  float: right;
+  margin-top: -5px;
+}
+
+.tool-css button{
+  margin-left: 10px;
+  width: 150px;
+}
+
+.tool-css{
+  width: 90%;
+  border: 1px solid black;
+}
+
+.question-format{
+  width: 100px;
+}
+
+.btn-question-chart{
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.ans-css {
+  margin-left: 5%;
+}
+
+.span-chart-content{
+  text-align: left;
+  margin-left: 19%;
+}
+
+.chart-show{
+  margin-top: 20px;
+  width: 500px;
+  height: 400px;
+}
+
+.question-in-chart{
+  margin-top: 30px;
+}

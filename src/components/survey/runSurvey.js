@@ -151,11 +151,13 @@ class RunSurvey extends React.Component {
                                         </div>
                                          <div className={'do-survey-component'}>
                                             {component.type === 5 ? <CheckboxCom index={i}
+                                                                                 handleChangeData={this.handleChange}
+                                                                                 isRequired={component}
                                                                                  trailer={this.state.trailer}
                                                                                  data={component}/>: ''}
                                         </div>
                                         <div className={'do-survey-component'}>
-                                            {component.type === 6 ? <DropdownCom index={i} trailer={this.state.trailer} data={component}/>: ''}
+                                            {component.type === 6 ? <DropdownCom index={i} handleChangeData={this.handleChange} trailer={this.state.trailer} data={component}/>: ''}
                                         </div>
                                     </span>
                                 ))}

@@ -15,7 +15,8 @@ class SurveyList extends React.Component {
         deleteSurveyFromServer: PropTypes.func.isRequired,
         surveyList: PropTypes.array.isRequired,
         createNewSurvey: PropTypes.func.isRequired,
-        header: PropTypes.object.isRequired
+        header: PropTypes.object.isRequired,
+        setShowModalLink: PropTypes.func.isRequired
     }
 
     constructor(props, context) {
@@ -43,6 +44,7 @@ class SurveyList extends React.Component {
     componentWillReceiveProps(nextProps){
         if(nextProps.header.showUrl !== undefined && nextProps.header.showUrl === true) {
             this.setState({showUrl: true})
+            nextProps.setShowModalLink(false)
         }
     }
 
@@ -205,7 +207,8 @@ const mapDispatchToProps = dispatch => bindActionCreators({
     publishSurvey: surveyAction.publishSurvey,
     getDetailSurvey: surveyAction.getDetailSurvey,
     getSurveyUrl: surveyAction.getSurveyUrl,
-    getAnswer: surveyAction.getAnswer
+    getAnswer: surveyAction.getAnswer,
+    setShowModalLink: surveyAction.setShowModalLink
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(SurveyList)

@@ -196,9 +196,11 @@ class DesignSurvey extends React.Component {
                         :
                         <div className={'survey-content'}>
                             <span className={'toolbox'}><b>TOOL BOX</b></span>
-                            <span className={'btn-add-page'}><Button onClick={e => this.addPage()}><span className="glyphicon glyphicon-plus"/> Add Page</Button></span>
-                            <Button onClick={e => this.showTrailer(true)}><span className="glyphicon glyphicon-expand"/> Trailer</Button>
-                            <span className={'edit-setting'}><Button onClick={e => this.setShowSetting(true)}><span className="glyphicon glyphicon-cog"/> Setting</Button></span>
+                            <span className={'setting-group-btn'}>
+                              <span className={'btn-add-page'}><Button onClick={e => this.addPage()}><span className="glyphicon glyphicon-plus"/> Add Page</Button></span>
+                                <Button onClick={e => this.showTrailer(true)}><span className="glyphicon glyphicon-expand"/> Trailer</Button>
+                                <span className={'edit-setting'}><Button onClick={e => this.setShowSetting(true)}><span className="glyphicon glyphicon-cog"/> Setting</Button></span>
+                            </span>
                             {this.state.showSettingModal === true ? <SurveySettingModal time={this.state.timeTarget} target={this.state.unitTarget} save={this.saveSetting} show={this.setShowSetting}/>: ''}
 
                             <div className={'edit-design'}>
@@ -264,6 +266,7 @@ class DesignSurvey extends React.Component {
                                                                             delete={this.delete}/>: ''}</div>
                                                                 <div>{component.type === 5 || component.type === 6 ?
                                                                     <Checkbox
+                                                                        isRequired={component.required}
                                                                         numberChange={component.component.numberChange}
                                                                         question={component.component.question}
                                                                         data={component}

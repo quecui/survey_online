@@ -71,7 +71,8 @@ export function addCheckbox(componentArr, pageIndex) {
             question: 'Which color do you like ?',
             options: ['yellow', 'red', 'grey'],
             numberChange: 0,
-            answer: ''
+            answer: [],
+            checked: []
         },
         required: false
     }

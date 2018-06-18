@@ -11,7 +11,8 @@ class Checkbox extends React.Component {
         move: PropTypes.func.isRequired,
         index: PropTypes.number.isRequired,
         data: PropTypes.object.isRequired,
-        question: PropTypes.string.isRequired
+        question: PropTypes.string.isRequired,
+        isRequired: PropTypes.bool
     }
 
     constructor(props, context) {
@@ -22,6 +23,7 @@ class Checkbox extends React.Component {
         this.handleOption = this.handleOption.bind(this)
         this.deteleOption = this.deteleOption.bind(this)
         this.addOption = this.addOption.bind(this)
+        this.changeRequired = this.changeRequired.bind(this)
     }
 
     handleQuestion(question){
@@ -54,6 +56,13 @@ class Checkbox extends React.Component {
         this.props.handleValue(this.props.index, tmp)
     }
 
+    changeRequired(value){
+      const tmp = this.props.data
+      tmp.required = value
+
+      this.props.handleValue(this.props.index, tmp)
+    }
+
     render() {
         return (
             <div className={'component-survey'}>
@@ -61,7 +70,7 @@ class Checkbox extends React.Component {
                     <div className={'single-text-name'}>
                         <ControlLabel className={'signin-form'}>{this.props.data.name}</ControlLabel>
                         <span className={'select-type-text'}>
-                             <input type={'checkbox'}></input> Required
+                             <input onClick={e => this.changeRequired(!this.props.isRequired)} checked={this.props.isRequired} type={'checkbox'}></input> Required
                              <span onClick={e => this.props.move(this.props.index, 1)}><span className="glyphicon glyphicon-triangle-top" />Up</span>
                              <span onClick={e => this.props.move(this.props.index, 2)}><span className="glyphicon glyphicon-triangle-bottom" />Down</span>
                         </span>

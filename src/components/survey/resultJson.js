@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import ReactJson from 'react-json-view'
-import {Button, ControlLabel, InputGroup, FormControl} from 'react-bootstrap'
+import {Button} from 'react-bootstrap'
 import PropTypes from "prop-types"
 
 class ResultJson extends React.Component {

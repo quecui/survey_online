@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import {Button, ControlLabel, InputGroup, FormControl} from 'react-bootstrap'
+import {Button} from 'react-bootstrap'
 import PropTypes from "prop-types"
 import ResultJson from './resultJson'
 import ResultChart from './resultChart'
@@ -22,6 +22,10 @@ class ResultSurvey extends React.Component {
             alert: false
         }
 
+        this.mergeAnswer = this.mergeAnswer.bind(this)
+        this.countAnswer = this.countAnswer.bind(this)
+        this.count = this.count.bind(this)
+        this.removeDupAnswer = this.removeDupAnswer.bind(this)
     }
 
     componentWillMount(){
@@ -31,31 +35,114 @@ class ResultSurvey extends React.Component {
 
         if(this.props.result.length > 0 && this.props.result[0].survey_id !== undefined){
             this.setState({surveyId: this.props.result[0].survey_id})
-
-            const tmp = []
-            // Todo: sai roi. phai tong hop tat ca ket qua
-            this.props.result.map((resultElement) => {
-                resultElement.data.map((page) => {
-                    page.data.map((question) => {
-                        tmp.push(question)
-                    })
-                })
-            })
-
+            const tmp = this.countAnswer(this.mergeAnswer(this.props.result))
             this.setState({data: tmp})
         }
 
 
     }
 
+    count(answers, numbers){
+      const tmps = []
+      answers.map((answer, index) => {
+        let flag = false
+        tmps.map((tmp, i) => {
+          if(answer === tmp){
+            if(numbers[i] === undefined){
+              numbers.push(1)
+            } else {
+              numbers[i] = numbers[i] + 1
+            }
+            flag = true
+          }
+        })
+
+        if(flag === false){
+          tmps.push(answer)
+          numbers.push(1)
+        }
+      })
+
+      return numbers
+    }
+
+    removeDupAnswer(answers){
+      const tmps = []
+
+      answers.map((answer, index) => {
+        let flag = false
+
+        for(let i = 0; i < tmps.length; i++){
+          if(tmps[i] === answer) {
+            flag = true
+            break
+          }
+        }
+
+        if(flag == false){
+          tmps.push(answer)
+        }
+
+      })
+
+      return tmps
+    }
+
+    countAnswer(results){
+        results.map((result, i) => {
+          const answers = result.answer
+          const numbers = result.number
+          result.number = this.count(answers, numbers)
+          result.answer = this.removeDupAnswer(answers)
+        })
+
+        return results
+    }
+
+    mergeAnswer(results){
+      const anwserArr = []
+      let flag = false
+      let data = ''
+
+      results.map((result, index) => {
+        JSON.parse(result.data).map((pages, i) => {
+          pages.data.map((component, j) => {
+
+            if(flag === false){
+              if(component.type !== 8){
+                data = {
+                  type: component.type,
+                  question: component.component.question,
+                  answer: Array.isArray(component.component.answer) !== false ? component.component.answer : [component.component.answer],
+                  number: []
+                }
+                anwserArr.push(data)
+              }
+            } else {
+                Array.isArray(component.component.answer) === false ? anwserArr[j].answer.push(component.component.answer) : anwserArr[j].answer = [...anwserArr[j].answer, ...component.component.answer]
+            }
+          })
+
+        })
+        flag = true
+      })
+
+      return anwserArr
+  }
+
     render() {
         return (
             <div>
                 <div>
                     {this.state.alert === true ? '' :
-                        <Button bsStyle="primary" className={'btn-show-chart'}
-                                onClick={e => this.setState({isChangeView: !this.state.isChangeView})}>Show By
-                            Question</Button>
+                        <div>
+                          {this.state.isChangeView === false ?
+                            <Button bsStyle="primary" className={'btn-show-chart'}
+                                    onClick={e => this.setState({isChangeView: !this.state.isChangeView})}>Show Chart</Button>:
+                            <Button bsStyle="primary" className={'btn-show-chart'}
+                                    onClick={e => this.setState({isChangeView: !this.state.isChangeView})}>Back</Button>
+                          }
+                        </div>
                     }
                 </div>
                 {this.state.alert === true ? '':

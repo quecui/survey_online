@@ -9,7 +9,8 @@ class CheckboxCom extends React.Component {
         trailer: PropTypes.string,
         data: PropTypes.object,
         index: PropTypes.number,
-        handleChangeData: PropTypes.func
+        handleChangeData: PropTypes.func,
+        isRequired: PropTypes.bool
     }
 
     constructor(props, context) {
@@ -17,14 +18,36 @@ class CheckboxCom extends React.Component {
         this.props = props;
 
         this.handleChange = this.handleChange.bind(this)
+
+        this.state = {
+          checked: []
+        }
     }
 
-    handleChange(answer){
-        if(this.props.trailer !== 'true'){
+  componentWillMount(){
+      let tmp = []
+      this.props.data.component.options.map(dt => {
+        tmp.push(false)
+      })
+
+      this.setState({checked: tmp})
+  }
+
+    handleChange(answer, index){
+        let flag = !this.state.checked[index]
+        this.setState({checked: !this.state.checked})
+
+        if(this.props.trailer !== 'true' && flag === true){
             const tmp = this.props.data
-            tmp.component.answer = answer
+            tmp.component.answer.push(answer)
             this.props.handleChangeData(this.props.index, tmp)
         }
+
+      if(this.props.trailer !== 'true' && flag === false){
+        const tmp = this.props.data
+        tmp.component.answer.slice(index, 1)
+        this.props.handleChangeData(this.props.index, tmp)
+      }
     }
 
     render() {
@@ -34,7 +57,7 @@ class CheckboxCom extends React.Component {
                 <FormGroup className={'checkbox-survey'}>
                     {this.props.data.component.options.map((option, index) => (
                         <div className={'checkbox-survey'}>
-                                <Checkbox inline>{option}</Checkbox>
+                                <Checkbox checked={this.state.checked[index]} onClick={e => this.handleChange(option, index)} inline>{option}</Checkbox>
                         </div>
                     ))}
 

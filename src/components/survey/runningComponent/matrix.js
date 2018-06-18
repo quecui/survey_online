@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import {Button} from 'react-bootstrap'
 import PropTypes from "prop-types"
 
 class Matrix extends React.Component {
@@ -21,7 +20,7 @@ class Matrix extends React.Component {
     render() {
         return (
             <div>
-
+              asdasd
             </div>
         )
     }

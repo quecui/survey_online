@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import {Button, ControlLabel, InputGroup, FormControl} from 'react-bootstrap'
+import {ControlLabel, InputGroup, FormControl} from 'react-bootstrap'
 import PropTypes from "prop-types"
 
 class SingleText extends React.Component {

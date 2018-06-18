@@ -32,7 +32,7 @@ class DropdownCom extends React.Component {
             <div className={'do-singletext'}>
                 <ControlLabel>{this.props.index + 1}. {this.props.data.component.question}</ControlLabel>
                 <FormGroup controlId="formControlsSelect">
-                    <FormControl componentClass="select" placeholder="select" className={'dropbox-survey'}>
+                    <FormControl componentClass="select" onChange={e => this.handleChange(e.target.value)} placeholder="select" className={'dropbox-survey'}>
                         {this.props.data.component.options.map((option, index) => (
                             <option value={option}>{option}</option>
                         ))}

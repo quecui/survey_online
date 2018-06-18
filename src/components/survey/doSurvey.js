@@ -19,7 +19,8 @@ class DoSurvey extends React.Component {
         this.state = {
             pages: [],
             change: 0,
-            surveyId: ''
+            surveyId: '',
+            star: 0
         }
     }
 
@@ -41,6 +42,7 @@ class DoSurvey extends React.Component {
         if(nextProps.survey.pages.length > 0){
             this.setState({pages: SurveyUtil.convertPageFromString(nextProps.survey.pages)})
             this.setState({change: this.state.change + 1})
+            this.setState({star: nextProps.survey.star})
         }
     }
 
@@ -50,7 +52,7 @@ class DoSurvey extends React.Component {
                 <div className={'do-survey-title'}>
                     {this.props.survey.name}
                 </div>
-                {this.state.change > 0 ? <div><RunSurvey surveyId={this.state.surveyId} data={this.state.pages} trailer={'false'}/></div>: ''}
+                {this.state.change > 0 ? <div><RunSurvey star={this.state.star} surveyId={this.state.surveyId} data={this.state.pages} trailer={'false'}/></div>: ''}
             </div>
         )
     }

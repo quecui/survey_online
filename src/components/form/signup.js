@@ -57,8 +57,11 @@ class SignUp extends React.Component {
             return 0
         }
 
-        if(this.validate() === true)
-           this.props.submit(this.state.username, this.state.email, this.state.password)
+        if(this.validate() === true){
+            this.props.show(false)
+            this.props.submit(this.state.username, this.state.email, this.state.password)
+        }
+
         return 1
     }
 

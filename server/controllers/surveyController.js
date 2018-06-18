@@ -60,7 +60,8 @@ async function editSurvey(req, res) {
         $set: {
           name: req.body.name,
           time: req.body.time,
-          target: req.body.target
+          target: req.body.target,
+          star: req.body.star
         }
       }
     )

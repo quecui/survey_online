@@ -165,6 +165,7 @@ class DesignSurvey extends React.Component {
                 name: this.state.survey.name,
                 time: this.state.timeTarget,
                 target: this.state.unitTarget,
+                star: 3,
                 pages: surveyUtils.convertPageToString(this.state.pages)
             }
 

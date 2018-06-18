@@ -22,7 +22,8 @@ class RunSurvey extends React.Component {
         trailer: PropTypes.string.isRequired,
         postAnswer: PropTypes.func,
         data: PropTypes.object.isRequired,
-        surveyId: PropTypes.string
+        surveyId: PropTypes.string,
+        star: PropTypes.number
     }
 
     constructor(props, context) {

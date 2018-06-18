@@ -276,6 +276,7 @@ class DesignSurvey extends React.Component {
                                                                         delete={this.delete}/>: ''}</div>
                                                                 <div>{component.type === 8 ?
                                                                     <Matrix
+                                                                        isRequired={component.required}
                                                                         numberChange={component.component.numberChange}
                                                                         data={component}
                                                                         handleValue={this.handleChangeData}

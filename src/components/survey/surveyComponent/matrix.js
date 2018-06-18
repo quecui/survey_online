@@ -10,7 +10,8 @@ class Matrix extends React.Component {
         handleValue: PropTypes.func.isRequired,
         move: PropTypes.func.isRequired,
         index: PropTypes.number.isRequired,
-        data: PropTypes.object.isRequired
+        data: PropTypes.object.isRequired,
+        isRequired: PropTypes.bool
     }
 
     constructor(props, context) {
@@ -23,6 +24,7 @@ class Matrix extends React.Component {
         this.deleteRowValue = this.deleteRowValue.bind(this)
         this.handleRowChange = this.handleRowChange.bind(this)
         this.handleColChange = this.handleColChange.bind(this)
+        this.changeRequired = this.changeRequired.bind(this)
     }
 
     addRowOption(){
@@ -67,6 +69,13 @@ class Matrix extends React.Component {
         this.props.handleValue(this.props.index, tmp)
     }
 
+    changeRequired(value){
+        const tmp = this.props.data
+        tmp.required = value
+
+        this.props.handleValue(this.props.index, tmp)
+    }
+
     render() {
         return (
             <div className={'component-survey'}>
@@ -74,7 +83,7 @@ class Matrix extends React.Component {
                     <div className={'single-text-name'}>
                         <ControlLabel className={'signin-form'}>Matrix</ControlLabel>
                         <span className={'select-type-text'}>
-                             <input type={'checkbox'}></input> Required
+                             <input onClick={e => this.changeRequired(!this.props.isRequired)} checked={this.props.isRequired} type={'checkbox'}></input> Required
                              <span onClick={e => this.props.move(this.props.index, 1)}><span className="glyphicon glyphicon-triangle-top" />Up</span>
                              <span onClick={e => this.props.move(this.props.index, 2)}><span className="glyphicon glyphicon-triangle-bottom" />Down</span>
                         </span>

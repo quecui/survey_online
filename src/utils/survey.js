@@ -22,7 +22,7 @@ export function addMatrix(componentArr, pageIndex) {
             rowOptions: ['car', 'mobile'],
             colOptions: ['hard', 'grass'],
             numberChange: 0,
-            answer: ''
+            answer: []
         },
         required: false
     }

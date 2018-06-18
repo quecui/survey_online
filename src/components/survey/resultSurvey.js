@@ -43,25 +43,30 @@ class ResultSurvey extends React.Component {
     }
 
     count(answers, numbers){
-      const tmps = []
-      answers.map((answer, index) => {
-        let flag = false
-        tmps.map((tmp, i) => {
-          if(answer === tmp){
-            if(numbers[i] === undefined){
-              numbers.push(1)
-            } else {
-              numbers[i] = numbers[i] + 1
-            }
-            flag = true
-          }
-        })
+       if(answers[0].row === undefined) {
+           const tmps = []
+           answers.map((answer, index) => {
+               let flag = false
+               tmps.map((tmp, i) => {
+                   if(answer === tmp){
+                       if(numbers[i] === undefined){
+                           numbers.push(1)
+                       } else {
+                           numbers[i] = numbers[i] + 1
+                       }
+                       flag = true
+                   }
+               })
 
-        if(flag === false){
-          tmps.push(answer)
-          numbers.push(1)
-        }
-      })
+               if(flag === false){
+                   tmps.push(answer)
+                   numbers.push(1)
+               }
+           })
+       } else {
+
+       }
+
 
       return numbers
     }
@@ -79,7 +84,7 @@ class ResultSurvey extends React.Component {
           }
         }
 
-        if(flag == false){
+        if(flag === false){
           tmps.push(answer)
         }
 
@@ -119,8 +124,32 @@ class ResultSurvey extends React.Component {
                 }
                 anwserArr.push(data)
               }
+
+              if(component.type === 8){
+                  const hardgrass = {
+                      row: component.component.answer,
+                      number:[]
+                  }
+
+                  data = {
+                      type: component.type,
+                      question: component.component.question,
+                      answer: [hardgrass]
+                  }
+                  anwserArr.push(data)
+              }
             } else {
-                Array.isArray(component.component.answer) === false ? anwserArr[j].answer.push(component.component.answer) : anwserArr[j].answer = [...anwserArr[j].answer, ...component.component.answer]
+                if(component.type !== 8) {
+                    Array.isArray(component.component.answer) === false ? anwserArr[j].answer.push(component.component.answer) : anwserArr[j].answer = [...anwserArr[j].answer, ...component.component.answer]
+                }
+
+                if(component.type === 8){
+                    const hardgrass = {
+                        row: [component.component.answer],
+                        number:[]
+                    }
+                    anwserArr[j].answer.push(hardgrass)
+                }
             }
             j ++;
           })

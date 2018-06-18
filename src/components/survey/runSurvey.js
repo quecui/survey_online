@@ -14,6 +14,8 @@ import Email from './runningComponent/email'
 import Matrix from './runningComponent/matrix'
 import Number from './runningComponent/number'
 import SingleText from './runningComponent/singletext'
+import RootStar from '../../assets/img/star-black.png'
+import Star from '../../assets/img/star-ye.png'
 
 class RunSurvey extends React.Component {
     static propTypes = {
@@ -31,13 +33,15 @@ class RunSurvey extends React.Component {
             trailer: this.props.trailer,
             pageIndex: 0,
             data: this.props.data,
-            isShowWelcome: false
+            isShowWelcome: false,
+            star: [1,1,1,1,1]
         }
 
         this.handleChange = this.handleChange.bind(this)
         this.arrowRightAction = this.arrowRightAction.bind(this)
         this.submitAnswer = this.submitAnswer.bind(this)
         this.checkLastPage = this.checkLastPage.bind(this)
+        this.changeStar = this.changeStar.bind(this)
     }
 
     handleChange(index, data){
@@ -74,6 +78,14 @@ class RunSurvey extends React.Component {
                       flag = true
                       break
                     }
+                  }
+
+                  if(component.type === 8){
+                      if(component.component.answer.length < component.component.colOptions.length){
+                          alert('Please complete question ' + (i+1))
+                          flag = true
+                          break
+                      }
                   }
                 }
             }
@@ -114,6 +126,14 @@ class RunSurvey extends React.Component {
                       break
                     }
                   }
+
+                  if(component.type === 8){
+                      if(component.component.answer.length < component.component.colOptions.length){
+                          alert('Please complete question ' + (i+1))
+                          flag = true
+                          break
+                      }
+                  }
                 }
             }
         }
@@ -127,6 +147,19 @@ class RunSurvey extends React.Component {
             this.setState({isShowWelcome: true})
 
         }
+    }
+
+    changeStar(index){
+        const tmp = this.state.star
+        for(let i = 0; i < 5; i++){
+            if(i <= index){
+                tmp[i] = 2
+            } else {
+                tmp[i] = 1
+            }
+        }
+
+        this.setState({star: tmp})
     }
 
     render() {
@@ -197,6 +230,10 @@ class RunSurvey extends React.Component {
                                         <div className={'do-survey-component'}>
                                             {component.type === 6 ? <DropdownCom index={i} handleChangeData={this.handleChange} trailer={this.state.trailer} data={component}/>: ''}
                                         </div>
+
+                                        <div className={'do-survey-component'}>
+                                            {component.type === 8 ? <Matrix index={i} handleChangeData={this.handleChange} trailer={this.state.trailer} data={component}/>: ''}
+                                        </div>
                                     </span>
                                 ))}
                             </span>
@@ -204,7 +241,20 @@ class RunSurvey extends React.Component {
                         </div>
                     ))}
                 </div>
-                {this.state.data.length - 1 === this.state.pageIndex ? <Button onClick={e => this.submitAnswer()} bsStyle="success" className={'submit-do-survey'}>Submit</Button>: ''}
+                <div>
+                    <div className={'star-css'}>
+                        <span className={'star-title'}>Rating for this survey: </span>
+                        {this.state.star.map((st, stIndex) => (
+                            <span>
+                                {st === 1 ? <img className={'icon-star'} onMouseEnter={e => this.changeStar(stIndex)} src={RootStar} />: <img className={'icon-star'} onMouseEnter={e => this.changeStar(stIndex)} src={Star} />}
+                            </span>
+                        ))}
+                    </div>
+                    <div>
+                        {this.state.data.length - 1 === this.state.pageIndex && this.props.trailer === 'false' ?
+                            <Button onClick={e => this.submitAnswer()} bsStyle="success" className={'submit-do-survey'}>Submit</Button>: ''}
+                    </div>
+                </div>
             </div>
         )
     }

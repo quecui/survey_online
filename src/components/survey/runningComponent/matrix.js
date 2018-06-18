@@ -5,7 +5,10 @@ import PropTypes from "prop-types"
 
 class Matrix extends React.Component {
     static propTypes = {
-        trailer: PropTypes.string.isRequired
+        trailer: PropTypes.string.isRequired,
+        data: PropTypes.object.isRequired,
+        index: PropTypes.number,
+        handleChangeData: PropTypes.func
     }
 
     constructor(props, context) {
@@ -15,12 +18,57 @@ class Matrix extends React.Component {
         this.state = {
             trailer: this.props.trailer !== 'true' ? 0: 1
         }
+
+        this.handleChange = this.handleChange.bind(this)
+        this.checkExist = this.checkExist.bind(this)
+    }
+
+    handleChange(indexCol, indexRow){
+        if(this.props.trailer !== 'true' && this.checkExist(this.props.data.component.answer, this.props.data.component.colOptions[indexCol]) === false){
+            const tmps = this.props.data
+            const data = {
+                col: this.props.data.component.colOptions[indexCol],
+                rows:[this.props.data.component.rowOptions[indexRow]]
+            }
+
+            tmps.component.answer.push(data)
+            this.props.handleChangeData(this.props.index, tmps)
+        }
+    }
+
+    checkExist(answers, element){
+        let flag = false
+        for(let i = 0; i < answers.length; i++){
+            if(answers[i].col === element){
+                flag = true
+                break
+            }
+        }
+        return flag
     }
 
     render() {
         return (
             <div>
-              asdasd
+              <div>
+                  {this.props.index + 1}. {this.props.data.component.question}
+              </div>
+              <table className={'matrix-table'}>
+                  <tr>
+                      <td className={'first-td'}></td>
+                      {this.props.data.component.rowOptions.map((row, i) => (
+                          <td>{row}</td>
+                      ))}
+                  </tr>
+                  {this.props.data.component.colOptions.map((col, i) => (
+                      <tr>
+                          <td>{col}</td>
+                          {this.props.data.component.rowOptions.map((row, j) => (
+                              <td><input onClick={e => this.handleChange(i, j)} type="radio" name={this.props.data.component.rowOptions[i]} value={this.props.data.component.rowOptions[i]}/></td>
+                          ))}
+                      </tr>
+                  ))}
+              </table>
             </div>
         )
     }

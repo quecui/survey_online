@@ -589,3 +589,24 @@ tr:nth-child(even) {
 .icon-required{
   color: red;
 }
+
+.matrix-table{
+    width: 100%;
+}
+
+.matrix-table tr td{
+    text-align: center;
+    width: 100px;
+}
+
+.first-td{
+    width: 10%;
+}
+
+.star-css{
+    float: left;
+}
+
+.icon-star{
+    width: 20px;
+}

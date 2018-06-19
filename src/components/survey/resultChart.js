@@ -126,10 +126,13 @@ class ResultChart extends React.Component {
     }
 
     selectQuestion(index){
-      this.setState({questionIndex: index})
       this.setState({questionDate: this.state.data[index]})
+      this.setState({questionIndex: index})
+
       if(this.state.data[index].type === 8){
         this.setState({isMatrix: true})
+      }else{
+        this.setState({isMatrix: false})
       }
       this.showChar(93)
     }

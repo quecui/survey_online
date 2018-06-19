@@ -127,6 +127,7 @@ class ResultChart extends React.Component {
 
     selectQuestion(index){
       this.setState({questionDate: this.state.data[index]})
+        this.render()
       this.setState({questionIndex: index})
 
       if(this.state.data[index].type === 8){
@@ -135,6 +136,7 @@ class ResultChart extends React.Component {
         this.setState({isMatrix: false})
       }
       this.showChar(93)
+
     }
 
     createPieChartData(){

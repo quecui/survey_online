@@ -20,7 +20,8 @@ class ResultJson extends React.Component {
 
         this.state = {
             isFormatJson: [],
-            ratingText: ''
+            ratingText: '',
+            rating:this.props.rating
         }
 
         this.setFormatIndex = this.setFormatIndex.bind(this)
@@ -59,6 +60,15 @@ class ResultJson extends React.Component {
         }
       }
 
+      let tmp = this.props.rating
+      for(let i = 0; i < tmp.length; i++){
+          if(i <= index){
+              tmp[i] = 2
+          }
+      }
+
+      this.setState({rating: tmp})
+
       switch (index){
         case 0:
           this.setState({ratingText: 'Very bad'})
@@ -86,7 +96,7 @@ class ResultJson extends React.Component {
             <div>
               <div className={'star-css star-result'}>
                 <span className={'star-title star-result-title'}><b>Rating for this survey: </b></span>
-                {this.props.rating.map((st, stIndex) => (
+                {this.state.rating.map((st, stIndex) => (
                   <span>
                     {st === 1 ? <img className={'icon-star'} src={RootStar} />: <img className={'icon-star'} src={Star} />}
                   </span>

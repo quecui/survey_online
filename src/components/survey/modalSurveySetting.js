@@ -73,7 +73,7 @@ class SurveySettingModal extends React.Component {
                                 <InputGroup className={'signin-bot-space'}>
                                     <InputGroup.Addon><span className="glyphicon glyphicon-pencil" /></InputGroup.Addon>
                                     <FormControl
-                                        type="date"
+                                        type="datetime-local"
                                         value={this.state.timeTarget}
                                         onChange={e => this.handleChange(2, e.target.value)}
                                         placeholder="Input password here"

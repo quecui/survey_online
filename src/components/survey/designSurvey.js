@@ -25,7 +25,7 @@ class DesignSurvey extends React.Component {
         this.state = {
             showSettingModal: false,
             unitTarget: this.props.survey.target,
-            timeTarget: surveyUtils.setTimeTarget(this.props.survey.time),
+            timeTarget: new Date(),
 
             pages: surveyUtils.convertPageFromString(this.props.survey.pages),
             survey: this.props.survey,

@@ -578,6 +578,7 @@ tr:nth-child(even) {
 .span-chart-content{
   text-align: left;
   margin-left: 19%;
+  margin-bottom: 20px;
 }
 
 .chart-show{
@@ -621,4 +622,15 @@ tr:nth-child(even) {
 
 .star-result b{
   margin-left: 5px;
+}
+
+.chart-show-matrix{
+  margin-top: 20px;
+  width: 500px;
+  height: 400px;
+  float: left;
+}
+
+.matrix-title-text{
+  text-align: center;
 }

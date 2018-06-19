@@ -66,7 +66,7 @@ class Matrix extends React.Component {
                           <td>{col}</td>
                           {this.props.data.component.rowOptions.map((row, j) => (
                               <td><input onClick={e => this.handleChange(i, j)} type="radio"
-                                         name={i < this.state.maxRowIndex ? this.props.data.component.rowOptions[i] : this.props.data.component.rowOptions[this.state.maxRowIndex-1]} value={row}/></td>
+                                         name={i < this.state.maxRowIndex ? this.props.data.component.rowOptions[i] : this.props.data.component.colOptions[i]} value={row}/></td>
                           ))}
                       </tr>
                   ))}

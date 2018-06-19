@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import {Button, Modal, ControlLabel, InputGroup, FormControl} from 'react-bootstrap'
 import PropTypes from "prop-types"
 import * as surveyAction from './surveyAction'
+import {CopyToClipboard} from "react-copy-to-clipboard";
 
 class SurveyList extends React.Component {
     static propTypes = {
@@ -37,7 +38,9 @@ class SurveyList extends React.Component {
             surveyIndex: 0,
             showPublishConfirm: false,
             disableEdit: false,
-            showUrl: false
+            showUrl: false,
+            value: '',
+            copied: false,
         }
     }
 
@@ -187,6 +190,11 @@ class SurveyList extends React.Component {
                         </Modal.Body>
 
                         <Modal.Footer>
+                          <CopyToClipboard text={this.props.header.link}
+                                           onCopy={() => this.setState({copied: true})}>
+                            <Button onClick={() => this.setState({showUrl: false})} bsStyle="warning">Copy</Button>
+                          </CopyToClipboard>
+
                             <Button onClick={e => this.setState({showUrl: false})} bsStyle="primary">Close</Button>
                         </Modal.Footer>
                     </Modal.Dialog>

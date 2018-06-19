@@ -26,7 +26,14 @@ class ResultChart extends React.Component {
           pieChart: false,
           barChart: false,
           polarChart: false,
-          donutChart: false
+          donutChart: false,
+          isMatrix: false,
+
+          lineMatrix: [],
+          pieMatrix: [],
+          barMatrix: [],
+          polarMatrix: [],
+          donutMatrix: []
         }
 
         this.showChar = this.showChar.bind(this)
@@ -121,117 +128,254 @@ class ResultChart extends React.Component {
     selectQuestion(index){
       this.setState({questionIndex: index})
       this.setState({questionDate: this.state.data[index]})
-
+      if(this.state.data[index].type === 8){
+        this.setState({isMatrix: true})
+      }
       this.showChar(93)
     }
 
     createPieChartData(){
-      const color = []
-      this.state.questionDate.answer.map((com, i) => {
-        color[i] = colorRoot[i]
-      })
+      if(this.state.isMatrix === false){
+        const color = []
+        this.state.questionDate.answer.map((com, i) => {
+          color[i] = colorRoot[i]
+        })
 
-      const pie = {
-        labels: this.state.questionDate.answer,
-        datasets: [
-          {
-            data: this.state.questionDate.number,
-            backgroundColor: color,
-            hoverBackgroundColor: color,
-          },
-        ],
+        const pie = {
+          labels: this.state.questionDate.answer,
+          datasets: [
+            {
+              data: this.state.questionDate.number,
+              backgroundColor: color,
+              hoverBackgroundColor: color,
+            },
+          ],
+        }
+
+        this.setState({dataChart: pie})
+      } else { // Matrix
+        let pieTmp = []
+        this.state.questionDate.answer.map(ans => {
+          const color = []
+          this.state.questionDate.answer.map((com, i) => {
+            color[i] = colorRoot[i]
+          })
+
+          const data = {
+            labels: ans.rows,
+            datasets: [
+              {
+                label: ans.col,
+                data: ans.number,
+                backgroundColor: color,
+                hoverBackgroundColor: color,
+              },
+            ]}
+
+          pieTmp.push(data)
+        })
+
+        this.setState({pieMatrix: pieTmp})
       }
 
-      this.setState({dataChart: pie})
     }
 
     createLineChartData(){
-      const line = {
-        labels: this.state.questionDate.answer,
-        datasets: [
-          {
-            label: 'Line Chart',
-            fill: false,
-            lineTension: 0.1,
-            backgroundColor: 'rgba(75,192,192,0.4)',
-            borderColor: 'rgba(75,192,192,1)',
-            borderCapStyle: 'butt',
-            borderDash: [],
-            borderDashOffset: 0.0,
-            borderJoinStyle: 'miter',
-            pointBorderColor: 'rgba(75,192,192,1)',
-            pointBackgroundColor: '#fff',
-            pointBorderWidth: 1,
-            pointHoverRadius: 5,
-            pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-            pointHoverBorderColor: 'rgba(220,220,220,1)',
-            pointHoverBorderWidth: 2,
-            pointRadius: 1,
-            pointHitRadius: 10,
-            data: this.state.questionDate.number,
-          },
-        ],
+      if(this.state.isMatrix === false){
+        const line = {
+          labels: this.state.questionDate.answer,
+          datasets: [
+            {
+              label: 'Line Chart',
+              fill: false,
+              lineTension: 0.1,
+              backgroundColor: 'rgba(75,192,192,0.4)',
+              borderColor: 'rgba(75,192,192,1)',
+              borderCapStyle: 'butt',
+              borderDash: [],
+              borderDashOffset: 0.0,
+              borderJoinStyle: 'miter',
+              pointBorderColor: 'rgba(75,192,192,1)',
+              pointBackgroundColor: '#fff',
+              pointBorderWidth: 1,
+              pointHoverRadius: 5,
+              pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+              pointHoverBorderColor: 'rgba(220,220,220,1)',
+              pointHoverBorderWidth: 2,
+              pointRadius: 1,
+              pointHitRadius: 10,
+              data: this.state.questionDate.number,
+            },
+          ],
+        }
+
+        this.setState({dataChart: line})
+      } else { // Matrix
+        let lineTmp = []
+        this.state.questionDate.answer.map(ans => {
+          const data = {
+            labels: ans.rows,
+            datasets: [
+              {
+                label: ans.col,
+                fill: false,
+                lineTension: 0.1,
+                backgroundColor: 'rgba(75,192,192,0.4)',
+                borderColor: 'rgba(75,192,192,1)',
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: 'rgba(75,192,192,1)',
+                pointBackgroundColor: '#fff',
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+                pointHoverBorderColor: 'rgba(220,220,220,1)',
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                data: ans.number,
+              },
+            ],
+          }
+          lineTmp.push(data)
+        })
+
+        this.setState({lineMatrix: lineTmp})
       }
 
-      this.setState({dataChart: line})
     }
 
     createBarChartData(){
-      const bar = {
-        labels: this.state.questionDate.answer,
-        datasets: [
-          {
-            label: 'Bar Chart',
-            backgroundColor: 'rgba(255,99,132,0.2)',
-            borderColor: 'rgba(255,99,132,1)',
-            borderWidth: 1,
-            hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-            hoverBorderColor: 'rgba(255,99,132,1)',
-            data: this.state.questionDate.number,
-          },
-        ],
+      if(this.state.isMatrix === false){
+        const bar = {
+          labels: this.state.questionDate.answer,
+          datasets: [
+            {
+              label: 'Bar Chart',
+              backgroundColor: 'rgba(255,99,132,0.2)',
+              borderColor: 'rgba(255,99,132,1)',
+              borderWidth: 1,
+              hoverBackgroundColor: 'rgba(255,99,132,0.4)',
+              hoverBorderColor: 'rgba(255,99,132,1)',
+              data: this.state.questionDate.number,
+            },
+          ],
+        }
+
+        this.setState({dataChart: bar})
+      } else {
+        let barTmp = []
+        this.state.questionDate.answer.map(ans => {
+          const bar = {
+            labels: ans.rows,
+            datasets: [
+              {
+                label: ans.col,
+                backgroundColor: 'rgba(255,99,132,0.2)',
+                borderColor: 'rgba(255,99,132,1)',
+                borderWidth: 1,
+                hoverBackgroundColor: 'rgba(255,99,132,0.4)',
+                hoverBorderColor: 'rgba(255,99,132,1)',
+                data: ans.number
+              },
+            ],
+          }
+          barTmp.push(bar)
+        })
+        this.setState({barMatrix: barTmp})
       }
 
-      this.setState({dataChart: bar})
     }
 
     createPolarChartData(){
-      const color = []
-      this.state.questionDate.answer.map((com, i) => {
-        color[i] = colorRoot[i]
-      })
+      if(this.state.isMatrix === false){
+        const color = []
+        this.state.questionDate.answer.map((com, i) => {
+          color[i] = colorRoot[i]
+        })
 
-      const polar = {
-        datasets: [
-          {
-            data: this.state.questionDate.number,
-            backgroundColor: color,
-            label: 'Polar Chart', // for legend
-          },
-        ],
-        labels: this.state.questionDate.answer,
+        const polar = {
+          datasets: [
+            {
+              data: this.state.questionDate.number,
+              backgroundColor: color,
+              label: 'Polar Chart', // for legend
+            },
+          ],
+          labels: this.state.questionDate.answer,
+        }
+
+        this.setState({dataChart: polar})
+      } else {
+        const polarTmp = []
+        this.state.questionDate.answer.map(ans => {
+          const color = []
+          this.state.questionDate.answer.map((com, i) => {
+            color[i] = colorRoot[i]
+          })
+
+          const polar = {
+            datasets: [
+              {
+                data: ans.number,
+                backgroundColor: color,
+                label: ans.col, // for legend
+              },
+            ],
+            labels: ans.rows,
+          }
+
+          polarTmp.push(polar)
+        })
+        this.setState({polarMatrix: polarTmp})
       }
-
-      this.setState({dataChart: polar})
     }
 
     createDonutChartData(){
-      const color = []
-      this.state.questionDate.answer.map((com, i) => {
-        color[i] = colorRoot[i]
-      })
+      if(this.state.isMatrix === false){
+        const color = []
+        this.state.questionDate.answer.map((com, i) => {
+          color[i] = colorRoot[i]
+        })
 
-      const donut = {
-        labels: this.state.questionDate.answer,
-        datasets: [
-          {
-            data: this.state.questionDate.number,
-            backgroundColor: color,
-            hoverBackgroundColor: color,
-          },
-        ],
+        const donut = {
+          labels: this.state.questionDate.answer,
+          datasets: [
+            {
+              data: this.state.questionDate.number,
+              backgroundColor: color,
+              hoverBackgroundColor: color,
+            },
+          ],
+        }
+        this.setState({dataChart: donut})
+      } else {
+        const donutTmp = []
+        this.state.questionDate.answer.map(ans => {
+          const color = []
+          this.state.questionDate.answer.map((com, i) => {
+            color[i] = colorRoot[i]
+          })
+
+          const donut = {
+            labels: ans.rows,
+            datasets: [
+              {
+                label: ans.col,
+                data: ans.number,
+                backgroundColor: color,
+                hoverBackgroundColor: color,
+              },
+            ],
+          }
+
+          donutTmp.push(donut)
+        })
+        this.setState({donutMatrix: donutTmp})
       }
-      this.setState({dataChart: donut})
+
     }
 
     render() {
@@ -282,40 +426,105 @@ class ResultChart extends React.Component {
                           {this.state.dataView === false ? '' :
                             <span>
                               {this.state.questionDate.answer.map((ans, i) => (
-                                <div>{ans}</div>
+                                <div>{JSON.stringify(ans)}</div>
                               ))}
                             </span>
                           }
 
                           {this.state.lineChart === false ? '':
-                            <div className={'chart-show'}>
-                                <Line data={this.state.dataChart}/>
-                            </div>
+                            <span>
+                              {this.state.isMatrix === false ?
+                                <div className={'chart-show'}>
+                                  <Line data={this.state.dataChart}/>
+                                </div>:
+                                <div>
+                                  {this.state.lineMatrix.map(chart => (
+                                    <div className={'chart-show-matrix'}>
+                                      <Line data={chart}/>
+                                    </div>
+                                  ))}
+                                </div>
+                              }
+                            </span>
                           }
 
                           {this.state.pieChart === false ? '':
-                            <div className={'chart-show'}>
-                              <Pie data={this.state.dataChart}/>
-                            </div>
+                            <span>
+                              {this.state.isMatrix === false ?
+                                <div className={'chart-show'}>
+                                  <Pie data={this.state.dataChart}/>
+                                </div>:
+                                <div>
+                                  {this.state.pieMatrix.map((chart,i) => (
+                                    <div className={'chart-show-matrix'}>
+                                      <div className={'matrix-title-text'}>
+                                        <b>Label:</b> {this.state.questionDate.answer[i].col}
+                                      </div>
+                                      <Pie data={chart}/>
+                                    </div>
+                                  ))}
+                                </div>
+                              }
+                            </span>
                           }
 
                           {this.state.barChart === false ? '':
-                            <div className={'chart-show'}>
-                              <Bar data={this.state.dataChart}/>
-                            </div>
+                            <span>
+                              {this.state.isMatrix === false ?
+                                <div className={'chart-show'}>
+                                  <Bar data={this.state.dataChart}/>
+                                </div>:
+                                <div>
+                                  {this.state.barMatrix.map(chart => (
+                                    <div className={'chart-show-matrix'}>
+                                      <Bar data={chart}/>
+                                    </div>
+                                  ))}
+                                </div>
+                              }
+                            </span>
                           }
 
                           {this.state.polarChart === false ? '':
-                            <div className={'chart-show'}>
-                              <Polar data={this.state.dataChart}/>
-                            </div>
+                            <span>
+                              {this.state.isMatrix === false ?
+                                <div className={'chart-show'}>
+                                  <Polar data={this.state.dataChart}/>
+                                </div>:
+                                <div>
+                                  {this.state.polarMatrix.map((chart,i) => (
+                                    <div className={'chart-show-matrix'}>
+                                      <div className={'matrix-title-text'}>
+                                        <b>Label:</b> {this.state.questionDate.answer[i].col}
+                                      </div>
+                                      <Polar data={chart}/>
+                                    </div>
+                                  ))}
+                                </div>
+                              }
+                            </span>
                           }
 
                           {this.state.donutChart === false ? '':
-                            <div className={'chart-show'}>
-                              <Doughnut data={this.state.dataChart}/>
-                            </div>
+                            <span>
+                              {this.state.isMatrix === false ?
+                                <div className={'chart-show'}>
+                                  <Doughnut data={this.state.dataChart}/>
+                                </div>:
+                                <div>
+                                  {this.state.donutMatrix.map((chart, i) => (
+                                    <div className={'chart-show-matrix'}>
+                                      <div className={'matrix-title-text'}>
+                                        <b>Label:</b> {this.state.questionDate.answer[i].col}
+                                      </div>
+                                      <Doughnut data={chart}/>
+                                    </div>
+                                  ))}
+                                </div>
+                              }
+                            </span>
                           }
+
                         </div>
                       </div>
                     }

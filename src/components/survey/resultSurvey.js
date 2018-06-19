@@ -29,6 +29,7 @@ class ResultSurvey extends React.Component {
         this.count = this.count.bind(this)
         this.removeDupAnswer = this.removeDupAnswer.bind(this)
         this.calRating = this.calRating.bind(this)
+        this.processAnswerMatrix = this.processAnswerMatrix.bind(this)
     }
 
     componentWillMount(){
@@ -67,7 +68,7 @@ class ResultSurvey extends React.Component {
     }
 
     count(answers, numbers){
-       if(answers[0].row === undefined) {
+       if(answers[0].col === undefined) {
            const tmps = []
            answers.map((answer, index) => {
                let flag = false
@@ -88,41 +89,59 @@ class ResultSurvey extends React.Component {
                }
            })
        } else {
+          answers.map((answer, i) => {
+            answer.number = this.count(answer.rows, answer.number)
+          })
 
+          return answers
        }
 
 
       return numbers
     }
 
-    removeDupAnswer(answers){
-      const tmps = []
+    removeDupAnswer(answers, flag){
+      if(flag === false){
+        const tmps = []
 
-      answers.map((answer, index) => {
-        let flag = false
+        answers.map((answer, index) => {
+          let flag = false
 
-        for(let i = 0; i < tmps.length; i++){
-          if(tmps[i] === answer) {
-            flag = true
-            break
+          for(let i = 0; i < tmps.length; i++){
+            if(tmps[i] === answer) {
+              flag = true
+              break
+            }
           }
-        }
 
-        if(flag === false){
-          tmps.push(answer)
-        }
+          if(flag === false){
+            tmps.push(answer)
+          }
 
-      })
+        })
 
-      return tmps
+        return tmps
+      }else {
+        answers.map((answer, i) => {
+          answer.rows = this.removeDupAnswer(answer.rows, false)
+        })
+
+        return answers
+      }
     }
 
     countAnswer(results){
         results.map((result, i) => {
-          const answers = result.answer
-          const numbers = result.number
-          result.number = this.count(answers, numbers)
-          result.answer = this.removeDupAnswer(answers)
+          if(result.answer[0].col === undefined) {
+            const answers = result.answer
+            const numbers = result.number
+            result.number = this.count(answers, numbers)
+            result.answer = this.removeDupAnswer(answers, false)
+          }else {
+            result.answer = this.count(result.answer, result.number)
+            result.answer = this.removeDupAnswer(result.answer, true)
+          }
+
         })
 
         return results
@@ -150,15 +169,10 @@ class ResultSurvey extends React.Component {
               }
 
               if(component.type === 8){
-                  const hardgrass = {
-                      row: component.component.answer,
-                      number:[]
-                  }
-
                   data = {
                       type: component.type,
                       question: component.component.question,
-                      answer: [hardgrass]
+                      answer: this.processAnswerMatrix(component.component.answer)
                   }
                   anwserArr.push(data)
               }
@@ -168,11 +182,9 @@ class ResultSurvey extends React.Component {
                 }
 
                 if(component.type === 8){
-                    const hardgrass = {
-                        row: [component.component.answer],
-                        number:[]
-                    }
-                    anwserArr[j].answer.push(hardgrass)
+                  anwserArr[j].answer.map((matrix, iMatrix) => {
+                    matrix.rows = matrix.rows.concat(component.component.answer[iMatrix].rows)
+                  })
                 }
             }
             j ++;
@@ -183,6 +195,16 @@ class ResultSurvey extends React.Component {
       })
 
       return anwserArr
+    }
+
+    processAnswerMatrix(matrix){
+      const newMatrix = []
+      matrix.map(result => {
+        result.number = []
+        newMatrix.push(result)
+      })
+
+      return newMatrix
     }
 
     render() {

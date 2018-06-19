@@ -627,10 +627,18 @@ tr:nth-child(even) {
 .chart-show-matrix{
   margin-top: 20px;
   width: 500px;
-  height: 400px;
+  /*height: 400px;*/
   float: left;
 }
 
 .matrix-title-text{
   text-align: center;
+}
+
+.done{
+    margin-left: 0% !important;
+}
+
+.before{
+    margin-left: 19%!important;
 }

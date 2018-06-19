@@ -127,7 +127,7 @@ class ResultChart extends React.Component {
 
     selectQuestion(index){
       this.setState({questionDate: this.state.data[index]})
-        this.render()
+
       this.setState({questionIndex: index})
 
       if(this.state.data[index].type === 8){
@@ -418,24 +418,25 @@ class ResultChart extends React.Component {
                   </td>
                   <td>
                     {this.state.questionDate === '' ? '':
-                      <div className={'span-chart-content'}>
-                        <div className={'question-in-chart'}>
-                          Question: {this.state.questionDate.question}
-                        </div>
-                        {this.state.dataView === false ? '' :
-                          <div>
-                            Answer:
-                          </div>
-                        }
-                        <div className={'ans-css'}>
-                          {this.state.dataView === false ? '' :
-                            <span>
-                              {this.state.questionDate.answer.map((ans, i) => (
-                                <div>{JSON.stringify(ans)}</div>
-                              ))}
+                      <div className={'span-chart-content ' + (this.state.isMatrix === true ? 'done' : '') }>
+                        <div className={this.state.isMatrix === true ? 'before': ''}>
+                            <div className={'question-in-chart'}>
+                                Question: {this.state.questionDate.question}
+                            </div>
+                            {this.state.dataView === false ? '' :
+                                <div>
+                                    Answer:
+                                </div>
+                            }
+                            {this.state.dataView === false ? '' :
+                                <span>
+                                {this.state.questionDate.answer.map((ans, i) => (
+                                    <div>{JSON.stringify(ans)}</div>
+                                ))}
                             </span>
-                          }
-
+                            }
+                        </div>
+                        <div className={'ans-css'}>
                           {this.state.lineChart === false ? '':
                             <span>
                               {this.state.isMatrix === false ?

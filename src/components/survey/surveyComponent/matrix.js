@@ -11,7 +11,8 @@ class Matrix extends React.Component {
         move: PropTypes.func.isRequired,
         index: PropTypes.number.isRequired,
         data: PropTypes.object.isRequired,
-        isRequired: PropTypes.bool
+        isRequired: PropTypes.bool,
+        question: PropTypes.string
     }
 
     constructor(props, context) {
@@ -25,6 +26,7 @@ class Matrix extends React.Component {
         this.handleRowChange = this.handleRowChange.bind(this)
         this.handleColChange = this.handleColChange.bind(this)
         this.changeRequired = this.changeRequired.bind(this)
+        this.handleQuestion = this.handleQuestion.bind(this)
     }
 
     addRowOption(){
@@ -76,6 +78,13 @@ class Matrix extends React.Component {
         this.props.handleValue(this.props.index, tmp)
     }
 
+    handleQuestion(question){
+      const tmp = this.props.data
+      tmp.component.question = question
+
+      this.props.handleValue(this.props.index, tmp)
+    }
+
     render() {
         return (
             <div className={'component-survey'}>
@@ -94,6 +103,8 @@ class Matrix extends React.Component {
                                 <InputGroup.Addon><span className="glyphicon glyphicon-pencil" /></InputGroup.Addon>
                                 <FormControl
                                     type="text"
+                                    value={this.props.question}
+                                    onChange={e => this.handleQuestion(e.target.value)}
                                     placeholder="Input your question here" />
                                 <FormControl.Feedback />
                             </InputGroup>

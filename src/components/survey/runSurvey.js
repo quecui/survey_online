@@ -43,6 +43,7 @@ class RunSurvey extends React.Component {
         this.submitAnswer = this.submitAnswer.bind(this)
         this.checkLastPage = this.checkLastPage.bind(this)
         this.changeStar = this.changeStar.bind(this)
+        this.countStar = this.countStar.bind(this)
     }
 
     handleChange(index, data){
@@ -142,9 +143,26 @@ class RunSurvey extends React.Component {
         return flag
     }
 
+    countStar(arr){
+      if(arr[0] === 1){
+        return 2
+      }
+
+      for(let i = 0; i < 5; i++){
+        if(arr[i] === 1){
+          return (i - 1)
+        }
+      }
+    }
+
     submitAnswer(){
         if(this.checkLastPage() === false){
-            this.props.postAnswer({survey_id: this.props.surveyId, data: JSON.stringify(this.state.data)})
+            const summaryData = {
+              pages: this.state.data,
+              rating: this.countStar(this.state.star)
+            }
+
+            this.props.postAnswer({survey_id: this.props.surveyId, data: JSON.stringify(summaryData)})
             this.setState({isShowWelcome: true})
 
         }

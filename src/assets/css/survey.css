@@ -571,6 +571,10 @@ tr:nth-child(even) {
   margin-left: 5%;
 }
 
+.star-result{
+  margin-top: 27px;
+}
+
 .span-chart-content{
   text-align: left;
   margin-left: 19%;
@@ -609,4 +613,12 @@ tr:nth-child(even) {
 
 .icon-star{
     width: 20px;
+}
+
+.star-result-title{
+  margin-right: 5px;
+}
+
+.star-result b{
+  margin-left: 5px;
 }

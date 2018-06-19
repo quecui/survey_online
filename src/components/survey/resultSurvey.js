@@ -19,13 +19,16 @@ class ResultSurvey extends React.Component {
             isChangeView : false,
             surveyId: '',
             data: [],
-            alert: false
+            alert: false,
+
+            star: [1,1,1,1,1]
         }
 
         this.mergeAnswer = this.mergeAnswer.bind(this)
         this.countAnswer = this.countAnswer.bind(this)
         this.count = this.count.bind(this)
         this.removeDupAnswer = this.removeDupAnswer.bind(this)
+        this.calRating = this.calRating.bind(this)
     }
 
     componentWillMount(){
@@ -36,10 +39,31 @@ class ResultSurvey extends React.Component {
         if(this.props.result.length > 0 && this.props.result[0].survey_id !== undefined){
             this.setState({surveyId: this.props.result[0].survey_id})
             const tmp = this.countAnswer(this.mergeAnswer(this.props.result))
+
+            const rating = this.calRating(this.props.result)
+            const starTmp = this.state.star
+            for(let i = 0; i <= rating; i++){
+                starTmp[i] = 2
+            }
+
+            this.setState({star: starTmp})
             this.setState({data: tmp})
         }
 
 
+    }
+
+    calRating(dataList){
+      const length = dataList.length
+      let total = 0;
+
+      dataList.map(result => {
+        total = total + JSON.parse(result.data).rating
+      })
+
+      if(total/length -  parseInt(total / length) < 0.5)
+        return parseInt(total / length)
+      return parseInt(total / length) + 1
     }
 
     count(answers, numbers){
@@ -111,7 +135,7 @@ class ResultSurvey extends React.Component {
 
       results.map((result, index) => { // get all submit
         let j = 0;
-        JSON.parse(result.data).map((pages, i) => { //get all page
+        JSON.parse(result.data).pages.map((pages, i) => { //get all page
           pages.data.map((component) => { // get all component
 
             if(flag === false){
@@ -179,7 +203,7 @@ class ResultSurvey extends React.Component {
                 {this.state.alert === true ? '':
                     <div>
                         {this.state.isChangeView === false ?
-                            <ResultJson data={this.state.data} surveyId={this.state.surveyId}/> :
+                            <ResultJson rating={this.state.star}  data={this.state.data} surveyId={this.state.surveyId}/> :
                             <ResultChart data={this.state.data} surveyId={this.state.surveyId}/>
                         }
                     </div>

@@ -22,10 +22,21 @@ class DesignSurvey extends React.Component {
         super(props, context)
         this.props = props;
 
+        let hour = this.props.survey.time.split(':')[0]
+        let date = hour.substring(0, hour.length - 2)
+        hour = hour.substring(hour.length - 2, hour.length)
+        hour = parseInt(hour) + 7
+
+        if(hour <= 9){
+          hour = '0'+hour
+        }
+
+        date = date + hour
+
         this.state = {
             showSettingModal: false,
             unitTarget: this.props.survey.target,
-            timeTarget: this.props.survey.time.split(':')[0] + ':' + this.props.survey.time.split(':')[1],
+            timeTarget: date + ':' + this.props.survey.time.split(':')[1],
 
             pages: surveyUtils.convertPageFromString(this.props.survey.pages),
             survey: this.props.survey,
@@ -144,7 +155,7 @@ class DesignSurvey extends React.Component {
             return false
         }
 
-        if(this.state.pages[0].data === undefined || this.state.pages[0].data.length === 0){
+        if(this.state.pages.length === 0 || this.state.pages[0].data === undefined || this.state.pages[0].data.length === 0){
             alert('Survey Component is required')
             return false
         }

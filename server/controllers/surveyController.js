@@ -250,9 +250,11 @@ function notifySurvey (){
             });
             if (survey){
               let resultNumber = await Result.count({survey_id: survey._id});
-              let dateNow = new Date();
-              let dateHaft = (survey.time + survey.datePublish)/2;
-              if (dateNow >= survey.time){
+              let dateNow = Date.parse(new Date());
+              let surveyTime = Date.parse(new Date(survey.time))
+              let surveyPublish = Date.parse(new Date(survey.datePublish))
+              let dateHaft = (surveyTime+ surveyPublish)/2;
+              if (dateNow >= surveyTime){
                 listSurvey.push({name: survey.name, target: survey.target, result: resultNumber});
                 await Survey.findByIdAndUpdate(
                   survey._id,

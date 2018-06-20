@@ -233,14 +233,17 @@ function statisticalSurvey (req, res) {
 
 function notifySurvey (){
   let CronJob = require('cron').CronJob;
-  let job = new CronJob('*/2 * * * *', async function() {
+  let job = new CronJob('*/5 * * * * *', async function() {
       try {
         // can them check neu nhung cai nao da duoc gui tin nhan roi thi thoi
         let allUser = await User.find();
 
         for(let index = 0; index < allUser.length; index++){
           let user = allUser[index]
-          let listSurvey = [];
+          let listDoneTime = [];
+          let listDoneTarget = [];
+          let listHaftTime = [];
+          let listHaftTarget = [];
           for(let i= 0; i < user.surveys.length; i++){
             let surveyId = user.surveys[i]
             let survey = await Survey.findOne({
@@ -255,18 +258,7 @@ function notifySurvey (){
               let surveyPublish = Date.parse(new Date(survey.datePublish))
               let dateHaft = (surveyTime+ surveyPublish)/2;
               if (dateNow >= surveyTime){
-                listSurvey.push({name: survey.name, target: survey.target, result: resultNumber});
-                await Survey.findByIdAndUpdate(
-                  survey._id,
-                  {
-                    $set: {
-                      complete: 2
-                    }
-                  }
-                )
-              }
-              else if(resultNumber >= survey.target){
-                listSurvey.push({name: survey.name, target: survey.target, result: resultNumber});
+                listDoneTime.push({name: survey.name, target: survey.target, result: resultNumber});
                 await Survey.findByIdAndUpdate(
                   survey._id,
                   {
@@ -277,7 +269,7 @@ function notifySurvey (){
                 )
               }
               else if(dateNow >= dateHaft && survey.checkHaftTime == 0){
-                listSurvey.push({name: survey.name, target: survey.target, result: resultNumber});
+                listHaftTime.push({name: survey.name, target: survey.target, result: resultNumber});
                 await Survey.findByIdAndUpdate(
                   survey._id,
                   {
@@ -288,8 +280,19 @@ function notifySurvey (){
                   }
                 )
               }
+              if(resultNumber >= survey.target){
+                listDoneTarget.push({name: survey.name, target: survey.target, result: resultNumber});
+                await Survey.findByIdAndUpdate(
+                  survey._id,
+                  {
+                    $set: {
+                      complete: 2
+                    }
+                  }
+                )
+              }
               else if (resultNumber >= survey.target/2 && survey.checkHaftTarget == 0){
-                listSurvey.push({name: survey.name, target: survey.target, result: resultNumber});
+                listHaftTarget.push({name: survey.name, target: survey.target, result: resultNumber});
                 await Survey.findByIdAndUpdate(
                   survey._id,
                   {
@@ -302,17 +305,45 @@ function notifySurvey (){
               }
             }
           }
-          if (listSurvey.length > 0){
-            let dataSend = `
-              <p>Một vài survey bạn đã đem đi khảo sát đã đạt yêu cầu đề ra hoặc phân nửa yêu cầu</p>
+          if (listDoneTime.length > 0 || listDoneTarget.length > 0 || listHaftTarget.length > 0 || listHaftTime.length > 0){
+            let dataSend = '<h2>Thông báo từ ứng dụng Survey-online</h2>'
+
+            if (listDoneTime.length > 0){
+              dataSend += '<ul>Các survey hết thời gian yêu cầu:'
+              for(let j = 0; j < listDoneTime.length; j++){
+                dataSend = dataSend + '<li>' + 'Tên survey: ' + listDoneTime[j].name + ', mục tiêu khảo sát: ' + listDoneTime[j].target + ', số lượng hiện tai: ' + listDoneTime[j].result + '</li>'
+              }
+              dataSend += '</ul>'
+            }
+
+            if (listHaftTime.length>0){
+              dataSend += '<ul>Các survey đã đạt một nửa thời gian yêu cầu:'
+              for(let j = 0; j < listHaftTime.length; j++){
+                dataSend = dataSend + '<li>' + 'Tên survey: ' + listHaftTime[j].name + ', mục tiêu khảo sát: ' + listHaftTime[j].target + ', số lượng hiện tai: ' + listHaftTime[j].result + '</li>'
+              }
+              dataSend += '</ul>'
+            }
+
+            if (listDoneTarget.length > 0){
+              dataSend += '<ul>Các survey đạt số lượng yêu cầu:'
+              for(let j = 0; j < listDoneTime.length; j++){
+                dataSend = dataSend + '<li>' + 'Tên survey: ' + listDoneTarget[j].name + ', mục tiêu khảo sát: ' + listDoneTarget[j].target + ', số lượng hiện tai: ' + listDoneTarget[j].result + '</li>'
+              }
+              dataSend += '</ul>'
+            }
+
+            if (listHaftTarget.length>0){
+              dataSend += '<ul>Các survey đạt một nửa số lượng yêu cầu:'
+              for(let j = 0; j < listHaftTarget.length; j++){
+                dataSend = dataSend + '<li>' + 'Tên survey: ' + listHaftTarget[j].name + ', mục tiêu khảo sát: ' + listHaftTarget[j].target + ', số lượng hiện tai: ' + listHaftTarget[j].result + '</li>'
+              }
+              dataSend += '</ul>'
+            }
+
+            dataSend += `
               <p>Bạn hãy đăng nhập vào kệ thống để có thể thống kê kết quả và xem các câu trả lời</p>
               <p>Bạn hãy truy cập link sau <a href="http://localhost:3000/survey">Click<a><p>
-              <ul>Sau đó truy cập các survey:`
-            for(let j = 0; j < listSurvey.length; j++){
-              dataSend = dataSend + '<li>' + 'Tên survey: ' + listSurvey[j].name + ', mục tiêu khảo sát: ' + listSurvey[j].target + ', số lượng hiện tai: ' + listSurvey[j].result + '</li>'
-            }
-            dataSend += '</ul>'
-
+            `
             let transporter = nodemailer.createTransport({
               service: 'gmail',
               auth: {

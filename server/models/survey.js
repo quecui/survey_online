@@ -9,7 +9,7 @@ const surveySchema = new Schema({
   target: { type: Number, require: true },
   star: { type: Number, require: true },
   active: { type: Boolean, require: true , default: false},
-  complete: { type: Boolean, require: true , default: false},
+  complete: { type: Number, require: true , default: 0},
   pages: [{ type: Schema.Types.ObjectId, ref: 'Page'}]
 })
 

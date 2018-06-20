@@ -232,8 +232,7 @@ function statisticalSurvey (req, res) {
 
 function notifySurvey (){
   let CronJob = require('cron').CronJob;
-  // sau khi test chin lai 1h ( hien tai dang moi 5s) => neu 2 phut/lan:  '*/2 * * * *'
-  let job = new CronJob('*/5 * * * * *', async function() {
+  let job = new CronJob('*/2 * * * *', async function() {
       try {
         // can them check neu nhung cai nao da duoc gui tin nhan roi thi thoi
         let allUser = await User.find();

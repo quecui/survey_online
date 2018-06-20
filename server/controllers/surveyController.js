@@ -263,6 +263,17 @@ function notifySurvey (){
                   }
                 )
               }
+              else if(resultNumber >= survey.target){
+                listSurvey.push({name: survey.name, target: survey.target, result: resultNumber});
+                await Survey.findByIdAndUpdate(
+                  survey._id,
+                  {
+                    $set: {
+                      complete: 2
+                    }
+                  }
+                )
+              }
               else if(dateNow >= dateHaft && survey.checkHaftTime == 0){
                 listSurvey.push({name: survey.name, target: survey.target, result: resultNumber});
                 await Survey.findByIdAndUpdate(
@@ -271,17 +282,6 @@ function notifySurvey (){
                     $set: {
                       complete: 1,
                       checkHaftTime: 1
-                    }
-                  }
-                )
-              }
-              else if(resultNumber >= survey.target){
-                listSurvey.push({name: survey.name, target: survey.target, result: resultNumber});
-                await Survey.findByIdAndUpdate(
-                  survey._id,
-                  {
-                    $set: {
-                      complete: 2
                     }
                   }
                 )

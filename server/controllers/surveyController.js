@@ -308,7 +308,7 @@ function notifySurvey (){
             let mailOptions = {
               from: 'projectsurvey123456789@gmail.com',
               to: user.email,
-              subject: 'Some survey of you are complete!',
+              subject: 'Thông báo survey!',
               text: dataSend,
               html: dataSend
             };

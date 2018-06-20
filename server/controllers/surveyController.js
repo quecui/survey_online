@@ -248,8 +248,9 @@ function notifySurvey (){
               complete: {$lt: 2}
             });
             if (survey){
+              let resultNumber = await Result.count({survey_id: survey._id});
               if (new Date() > survey.time){
-                listSurvey.push({_id: survey._id, name: survey.name});
+                listSurvey.push({name: survey.name, target: survey.target, result: resultNumber});
                 await Survey.findByIdAndUpdate(
                   survey._id,
                   {
@@ -260,9 +261,8 @@ function notifySurvey (){
                 )
               }
               else{
-                let resultNumber = await Result.count({survey_id: survey._id});
                 if (resultNumber >= survey.target){
-                  listSurvey.push({_id: survey._id, name: survey.name});
+                  listSurvey.push({name: survey.name, target: survey.target, result: resultNumber});
                   await Survey.findByIdAndUpdate(
                     survey._id,
                     {
@@ -273,7 +273,7 @@ function notifySurvey (){
                   )
                 }
                 else if (resultNumber >= survey.target/2 && survey.complete != 1){
-                  listSurvey.push({_id: survey._id, name: survey.name});
+                  listSurvey.push({name: survey.name, target: survey.target, result: resultNumber});
                   await Survey.findByIdAndUpdate(
                     survey._id,
                     {
@@ -293,7 +293,7 @@ function notifySurvey (){
               <p>Bạn hãy truy cập link sau <a href="http://localhost:3000/survey">Click<a><p>
               <ul>Sau đó truy cập các survey:`
             for(let j = 0; j < listSurvey.length; j++){
-              dataSend = dataSend + '<li>' + 'id: ' + listSurvey[j]._id + ', name: ' + listSurvey[j].name + '</li>'
+              dataSend = dataSend + '<li>' + 'Tên survey: ' + listSurvey[j].name + ', mục tiêu khảo sát: ' + listSurvey[j].target + ', số lượng hiện tai: ' + listSurvey[j].result + '</li>'
             }
             dataSend += '</ul>'
 

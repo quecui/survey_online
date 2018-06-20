@@ -19,7 +19,7 @@ class Contact extends React.Component {
 
     render() {
         return (
-            <div className="page-body">
+            <div className="page-body contact-page">
                 <div className={'page-mid-space'} />
                 <div className="page-content">
                     <div className={'contact-content'}>

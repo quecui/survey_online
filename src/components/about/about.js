@@ -8,7 +8,7 @@ class About extends React.Component {
 
     render() {
         return (
-            <div className="page-body">
+            <div className="page-body about-page">
                 <div className={'page-mid-space'} />
                 <div className="page-content">
                     <div className={'about-content'}>

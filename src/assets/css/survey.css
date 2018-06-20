@@ -104,6 +104,18 @@
     margin-top: -20px;
 }
 
+.about-page{
+  background-position: center;
+  background-size: cover;
+  background-image: url('../img/gas-background.jpg');
+}
+
+.contact-page{
+  background-position: center;
+  background-size: cover;
+  background-image: url('../img/contact.jpg');
+}
+
 .page-content{
     width: 60%;
     background-color: white;

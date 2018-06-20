@@ -25,7 +25,6 @@ function createSurvey(req, res) {
         if (err) {
           return res.status('500').json({message: 'Error with server!'});
         }
-        console.log(survey)
         return res.status('200').json({message: 'Success!', dataReq: survey});
       }
     )
@@ -233,8 +232,7 @@ function statisticalSurvey (req, res) {
 
 function notifySurvey (){
   let CronJob = require('cron').CronJob;
-  // sau khi test chin lai 1h ( hien tai dang moi 5s) => 1h: '0 59 * * * *'
-  let job = new CronJob('* 0/5 0 ? * * *', async function() {
+  let job = new CronJob('*/2 * * * *', async function() {
       try {
         // can them check neu nhung cai nao da duoc gui tin nhan roi thi thoi
         let allUser = await User.find();
@@ -247,29 +245,40 @@ function notifySurvey (){
             let survey = await Survey.findOne({
               _id: surveyId,
               active: true,
-              complete: false
+              complete: {$lt: 2}
             });
             if (survey){
+              let resultNumber = await Result.count({survey_id: survey._id});
               if (new Date() > survey.time){
-                listSurvey.push({_id: survey._id, name: survey.name});
+                listSurvey.push({name: survey.name, target: survey.target, result: resultNumber});
                 await Survey.findByIdAndUpdate(
                   survey._id,
                   {
                     $set: {
-                      complete: true
+                      complete: 2
                     }
                   }
                 )
               }
               else{
-                let resultNumber = await Result.count({survey_id: survey._id});
                 if (resultNumber >= survey.target){
-                  listSurvey.push({_id: survey._id, name: survey.name});
+                  listSurvey.push({name: survey.name, target: survey.target, result: resultNumber});
                   await Survey.findByIdAndUpdate(
                     survey._id,
                     {
                       $set: {
-                        complete: true
+                        complete: 2
+                      }
+                    }
+                  )
+                }
+                else if (resultNumber >= survey.target/2 && survey.complete != 1){
+                  listSurvey.push({name: survey.name, target: survey.target, result: resultNumber});
+                  await Survey.findByIdAndUpdate(
+                    survey._id,
+                    {
+                      $set: {
+                        complete: 1
                       }
                     }
                   )
@@ -279,15 +288,14 @@ function notifySurvey (){
           }
           if (listSurvey.length > 0){
             let dataSend = `
-              <p>Một vài survey bạn đã đem đi khảo sát đã đạt yêu cầu thời gian hoặc số lượng</p>
+              <p>Một vài survey bạn đã đem đi khảo sát đã đạt yêu cầu đề ra hoặc phân nửa số lượng</p>
               <p>Bạn hãy đăng nhập vào kệ thống để có thể thống kê kết quả và xem các câu trả lời</p>
               <p>Bạn hãy truy cập link sau <a href="http://localhost:3000/survey">Click<a><p>
               <ul>Sau đó truy cập các survey:`
             for(let j = 0; j < listSurvey.length; j++){
-              dataSend = dataSend + '<li>' + 'id: ' + listSurvey[j]._id + ', name: ' + listSurvey[j].name + '</li>'
+              dataSend = dataSend + '<li>' + 'Tên survey: ' + listSurvey[j].name + ', mục tiêu khảo sát: ' + listSurvey[j].target + ', số lượng hiện tai: ' + listSurvey[j].result + '</li>'
             }
             dataSend += '</ul>'
-            console.log(dataSend)
 
             let transporter = nodemailer.createTransport({
               service: 'gmail',

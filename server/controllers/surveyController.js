@@ -157,7 +157,8 @@ function publishSurvey (req, res) {
     survey_id,
     {
       $set: {
-        active: true
+        active: true,
+        datePublish: new Date()
       }
     },
     (err, result) => {
@@ -249,7 +250,9 @@ function notifySurvey (){
             });
             if (survey){
               let resultNumber = await Result.count({survey_id: survey._id});
-              if (new Date() > survey.time){
+              let dateNow = new Date();
+              let dateHaft = (survey.time + survey.datePublish)/2;
+              if (dateNow >= survey.time){
                 listSurvey.push({name: survey.name, target: survey.target, result: resultNumber});
                 await Survey.findByIdAndUpdate(
                   survey._id,
@@ -260,35 +263,46 @@ function notifySurvey (){
                   }
                 )
               }
-              else{
-                if (resultNumber >= survey.target){
-                  listSurvey.push({name: survey.name, target: survey.target, result: resultNumber});
-                  await Survey.findByIdAndUpdate(
-                    survey._id,
-                    {
-                      $set: {
-                        complete: 2
-                      }
+              else if(dateNow >= dateHaft && survey.checkHaftTime == 0){
+                listSurvey.push({name: survey.name, target: survey.target, result: resultNumber});
+                await Survey.findByIdAndUpdate(
+                  survey._id,
+                  {
+                    $set: {
+                      complete: 1,
+                      checkHaftTime: 1
                     }
-                  )
-                }
-                else if (resultNumber >= survey.target/2 && survey.complete != 1){
-                  listSurvey.push({name: survey.name, target: survey.target, result: resultNumber});
-                  await Survey.findByIdAndUpdate(
-                    survey._id,
-                    {
-                      $set: {
-                        complete: 1
-                      }
+                  }
+                )
+              }
+              else if(resultNumber >= survey.target){
+                listSurvey.push({name: survey.name, target: survey.target, result: resultNumber});
+                await Survey.findByIdAndUpdate(
+                  survey._id,
+                  {
+                    $set: {
+                      complete: 2
                     }
-                  )
-                }
+                  }
+                )
+              }
+              else if (resultNumber >= survey.target/2 && survey.checkHaftTarget == 0){
+                listSurvey.push({name: survey.name, target: survey.target, result: resultNumber});
+                await Survey.findByIdAndUpdate(
+                  survey._id,
+                  {
+                    $set: {
+                      complete: 1,
+                      checkHaftTarget: 1
+                    }
+                  }
+                )
               }
             }
           }
           if (listSurvey.length > 0){
             let dataSend = `
-              <p>Một vài survey bạn đã đem đi khảo sát đã đạt yêu cầu đề ra hoặc phân nửa số lượng</p>
+              <p>Một vài survey bạn đã đem đi khảo sát đã đạt yêu cầu đề ra hoặc phân nửa yêu cầu</p>
               <p>Bạn hãy đăng nhập vào kệ thống để có thể thống kê kết quả và xem các câu trả lời</p>
               <p>Bạn hãy truy cập link sau <a href="http://localhost:3000/survey">Click<a><p>
               <ul>Sau đó truy cập các survey:`

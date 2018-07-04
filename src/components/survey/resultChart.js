@@ -139,6 +139,22 @@ class ResultChart extends React.Component {
       dataF.answer = questionss
 
       if(this.state.data[index].type === 8){
+
+        dataF.answer.map((ans, i) => {
+          let totalM = 0
+          let tmps = []
+
+          ans.number.map(e => {
+            totalM += e
+          })
+          ans.number.map(e => {
+            tmps.push(e * 100 / totalM)
+          })
+
+          dataF.answer[i].number = tmps
+        })
+
+
         this.setState({questionIndex: index})
         this.setState({questionDate: dataF})
         this.setState({isMatrix: true})
@@ -416,8 +432,7 @@ class ResultChart extends React.Component {
               label: function(tooltipItem, data) {
                 return data['datasets'][0]['data'][tooltipItem['index']] + '%';
               }
-            },
-            "maintainAspectRatio": false
+            }
           }
         }
 

@@ -184,7 +184,9 @@ class ResultSurvey extends React.Component {
 
                 if(component.type === 8){
                   anwserArr[j].answer.map((matrix, iMatrix) => {
-                    matrix.rows = matrix.rows.concat(component.component.answer[iMatrix].rows)
+                    if(component.component.answer.length > 0){
+                      matrix.rows = matrix.rows.concat(component.component.answer[iMatrix].rows)
+                    }
                   })
                 }
             }

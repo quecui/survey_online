@@ -257,6 +257,7 @@ function notifySurvey (){
               let surveyTime = Date.parse(new Date(survey.time))
               let surveyPublish = Date.parse(new Date(survey.datePublish))
               let dateHaft = (surveyTime+ surveyPublish)/2;
+              console.log(dateHaft)
               if (dateNow >= surveyTime){
                 listDoneTime.push({name: survey.name, target: survey.target, result: resultNumber});
                 await Survey.findByIdAndUpdate(

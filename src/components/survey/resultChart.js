@@ -126,7 +126,17 @@ class ResultChart extends React.Component {
     }
 
     selectQuestion(index){
-      this.setState({questionDate: this.state.data[index]})
+      let data = this.state.data[index]
+      let numbers = data.number
+      let total = 0;
+
+      numbers.map(e => total += e)
+
+      let percents = []
+      numbers.map(e => percents.push(e * 100 / total))
+      data.number = percents
+
+      this.setState({questionDate: data})
 
       this.setState({questionIndex: index})
 
@@ -384,6 +394,19 @@ class ResultChart extends React.Component {
     }
 
     render() {
+        const chartOptions = {
+          "tooltips": {
+            callbacks: {
+              title: function(tooltipItem, data) {
+                return data['labels'][tooltipItem[0]['index']];
+              },
+              label: function(tooltipItem, data) {
+                return data['datasets'][0]['data'][tooltipItem['index']] + '%';
+              }
+            }
+          }
+        }
+
         return (
             <div>
               <table className={'table-result'}>
@@ -441,12 +464,12 @@ class ResultChart extends React.Component {
                             <span>
                               {this.state.isMatrix === false ?
                                 <div className={'chart-show'}>
-                                  <Line data={this.state.dataChart}/>
+                                  <Line data={this.state.dataChart} options={chartOptions}/>
                                 </div>:
                                 <div>
                                   {this.state.lineMatrix.map(chart => (
                                     <div className={'chart-show-matrix'}>
-                                      <Line data={chart}/>
+                                      <Line data={chart} options={chartOptions}/>
                                     </div>
                                   ))}
                                 </div>
@@ -458,7 +481,7 @@ class ResultChart extends React.Component {
                             <span>
                               {this.state.isMatrix === false ?
                                 <div className={'chart-show'}>
-                                  <Pie data={this.state.dataChart}/>
+                                  <Pie data={this.state.dataChart} options={chartOptions}/>
                                 </div>:
                                 <div>
                                   {this.state.pieMatrix.map((chart,i) => (
@@ -466,7 +489,7 @@ class ResultChart extends React.Component {
                                       <div className={'matrix-title-text'}>
                                         <b>Label:</b> {this.state.questionDate.answer[i].col}
                                       </div>
-                                      <Pie data={chart}/>
+                                      <Pie data={chart} options={chartOptions}/>
                                     </div>
                                   ))}
                                 </div>
@@ -478,12 +501,12 @@ class ResultChart extends React.Component {
                             <span>
                               {this.state.isMatrix === false ?
                                 <div className={'chart-show'}>
-                                  <Bar data={this.state.dataChart}/>
+                                  <Bar data={this.state.dataChart} options={chartOptions}/>
                                 </div>:
                                 <div>
                                   {this.state.barMatrix.map(chart => (
                                     <div className={'chart-show-matrix'}>
-                                      <Bar data={chart}/>
+                                      <Bar data={chart} options={chartOptions}/>
                                     </div>
                                   ))}
                                 </div>
@@ -495,7 +518,7 @@ class ResultChart extends React.Component {
                             <span>
                               {this.state.isMatrix === false ?
                                 <div className={'chart-show'}>
-                                  <Polar data={this.state.dataChart}/>
+                                  <Polar data={this.state.dataChart} options={chartOptions}/>
                                 </div>:
                                 <div>
                                   {this.state.polarMatrix.map((chart,i) => (
@@ -503,7 +526,7 @@ class ResultChart extends React.Component {
                                       <div className={'matrix-title-text'}>
                                         <b>Label:</b> {this.state.questionDate.answer[i].col}
                                       </div>
-                                      <Polar data={chart}/>
+                                      <Polar data={chart} options={chartOptions}/>
                                     </div>
                                   ))}
                                 </div>
@@ -515,7 +538,7 @@ class ResultChart extends React.Component {
                             <span>
                               {this.state.isMatrix === false ?
                                 <div className={'chart-show'}>
-                                  <Doughnut data={this.state.dataChart}/>
+                                  <Doughnut data={this.state.dataChart} options={chartOptions}/>
                                 </div>:
                                 <div>
                                   {this.state.donutMatrix.map((chart, i) => (
@@ -523,7 +546,7 @@ class ResultChart extends React.Component {
                                       <div className={'matrix-title-text'}>
                                         <b>Label:</b> {this.state.questionDate.answer[i].col}
                                       </div>
-                                      <Doughnut data={chart}/>
+                                      <Doughnut data={chart} options={chartOptions}/>
                                     </div>
                                   ))}
                                 </div>

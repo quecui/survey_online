@@ -66,7 +66,7 @@ export function showEditSurvey(data) {
 }
 
 export function changeViewSurvey(data) {
-    return {type: actionType.CHANGE_VIEW_SURVEY, data}
+    return {type: actionType.CHANGE_VIEW_SURVEY,data}
 }
 
 export function getDetailSurvey(data) {

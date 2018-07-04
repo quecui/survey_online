@@ -1,7 +1,7 @@
 import initialState from '../../initialState'
 import actionType from '../../constants/ActionTypes'
 
-export default function surveyReducers (surveyList = initialState.surveyList, action) {
+export default function s (surveyList = initialState.surveyList, action) {
     switch (action.type) {
         case actionType.CREATE_NEW_SURVEY:
             return [...surveyList, action.data]

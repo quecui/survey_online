@@ -132,16 +132,17 @@ class ResultSurvey extends React.Component {
 
     countAnswer(results){
         results.map((result, i) => {
-          if(result.answer[0].col === undefined) {
-            const answers = result.answer
-            const numbers = result.number
-            result.number = this.count(answers, numbers)
-            result.answer = this.removeDupAnswer(answers, false)
-          }else {
-            result.answer = this.count(result.answer, result.number)
-            result.answer = this.removeDupAnswer(result.answer, true)
+          if(result.answer.length > 0) {
+            if(result.answer[0].col === undefined) {
+              const answers = result.answer
+              const numbers = result.number
+              result.number = this.count(answers, numbers)
+              result.answer = this.removeDupAnswer(answers, false)
+            }else {
+              result.answer = this.count(result.answer, result.number)
+              result.answer = this.removeDupAnswer(result.answer, true)
+            }
           }
-
         })
 
         return results

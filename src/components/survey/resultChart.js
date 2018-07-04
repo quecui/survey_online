@@ -126,27 +126,40 @@ class ResultChart extends React.Component {
     }
 
     selectQuestion(index){
-      let data = this.state.data[index]
-      let numbers = data.number
-      let total = 0;
+      let dataF = this.state.data[index]
+      let questionss = []
+      dataF.answer.map(e => {
+        if(e.length > 20){
+          questionss.push(e.substring(0, 8) +'...')
+        }else {
+          questionss.push(e)
+        }
+      })
 
-      numbers.map(e => total += e)
-
-      let percents = []
-      numbers.map(e => percents.push(e * 100 / total))
-      data.number = percents
-
-      this.setState({questionDate: data})
-
-      this.setState({questionIndex: index})
+      dataF.answer = questionss
 
       if(this.state.data[index].type === 8){
+        this.setState({questionIndex: index})
+        this.setState({questionDate: dataF})
         this.setState({isMatrix: true})
       }else{
+        let data = dataF
+        let numbers = data.number
+        let total = 0;
+
+        numbers.map(e => total += e)
+
+        let percents = []
+        numbers.map(e => percents.push(e * 100 / total))
+        data.number = percents
+
+        this.setState({questionDate: data})
+
+        this.setState({questionIndex: index})
+
         this.setState({isMatrix: false})
       }
       this.showChar(93)
-
     }
 
     createPieChartData(){
@@ -403,7 +416,8 @@ class ResultChart extends React.Component {
               label: function(tooltipItem, data) {
                 return data['datasets'][0]['data'][tooltipItem['index']] + '%';
               }
-            }
+            },
+            "maintainAspectRatio": false
           }
         }
 
